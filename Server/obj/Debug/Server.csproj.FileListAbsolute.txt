@@ -1,0 +1,12 @@
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\bin\Debug\Server.exe.config
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\bin\Debug\Server.exe
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\bin\Debug\Server.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\bin\Debug\GameLogic.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\bin\Debug\MessagesLibrary.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\bin\Debug\GameLogic.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\bin\Debug\MessagesLibrary.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\obj\Debug\Server.exe
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\Server\obj\Debug\Server.pdb

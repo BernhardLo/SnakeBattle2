@@ -1,0 +1,10 @@
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\MessagesLibrary\obj\Debug\MessagesLibrary.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\MessagesLibrary\bin\Debug\MessagesLibrary.dll.config
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\MessagesLibrary\bin\Debug\MessagesLibrary.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\MessagesLibrary\bin\Debug\MessagesLibrary.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\MessagesLibrary\bin\Debug\GameLogic.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\MessagesLibrary\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\MessagesLibrary\bin\Debug\GameLogic.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\MessagesLibrary\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\MessagesLibrary\obj\Debug\MessagesLibrary.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\MessagesLibrary\obj\Debug\MessagesLibrary.pdb

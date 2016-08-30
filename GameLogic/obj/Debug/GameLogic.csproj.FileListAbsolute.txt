@@ -1,0 +1,5 @@
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\GameLogic\bin\Debug\GameLogic.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\GameLogic\bin\Debug\GameLogic.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\GameLogic\obj\Debug\GameLogic.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\GameLogic\obj\Debug\GameLogic.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\GameLogic\obj\Debug\GameLogic.csprojResolveAssemblyReference.cache

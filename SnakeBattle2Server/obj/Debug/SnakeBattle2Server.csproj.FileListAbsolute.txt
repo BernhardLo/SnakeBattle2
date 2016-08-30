@@ -1,0 +1,4 @@
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2Server\obj\Debug\SnakeBattle2Server.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2Server\obj\Debug\SnakeBattle2Server.Server.resources
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2Server\obj\Debug\SnakeBattle2Server.Properties.Resources.resources
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2Server\obj\Debug\SnakeBattle2Server.csproj.GenerateResource.Cache

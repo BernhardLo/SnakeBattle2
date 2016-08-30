@@ -1,0 +1,15 @@
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\bin\Debug\SnakeBattle2.exe.config
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\bin\Debug\SnakeBattle2.exe
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\bin\Debug\SnakeBattle2.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\obj\Debug\SnakeBattle2.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\obj\Debug\SnakeBattle2.SnakeBattle2.resources
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\obj\Debug\SnakeBattle2.Properties.Resources.resources
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\obj\Debug\SnakeBattle2.csproj.GenerateResource.Cache
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\obj\Debug\SnakeBattle2.exe
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\obj\Debug\SnakeBattle2.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\bin\Debug\GameLogic.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\bin\Debug\MessagesLibrary.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\bin\Debug\GameLogic.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\bin\Debug\MessagesLibrary.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\SnakeBattle2\SnakeBattle2\bin\Debug\Newtonsoft.Json.xml
