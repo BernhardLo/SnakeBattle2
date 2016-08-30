@@ -17,14 +17,13 @@ namespace SnakeBattle2
         {
             _windowRef = winRef;
 
-            int width = _windowRef.Width;
-            int height = _windowRef.Height;
             int top = _windowRef.Top;
             int right = _windowRef.Right;
-
             this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point(right, top);
             this.BackColor = Color.Black;
             InitializeComponent();
+            textBoxMainChat.Enabled = false;
             this.AcceptButton = buttonSend;
         }
 

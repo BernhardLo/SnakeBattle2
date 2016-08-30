@@ -17,10 +17,17 @@ namespace SnakeBattle2
         public List<Message> _commandList = new List<Message>();
         internal string _filterUserName = "<empty>";
         internal string _filterHostName = "<empty>";
+        SnakeBattle2 _windowRef;
 
-        public bool Connect(string ip, int port)
+        public NetworkClient(SnakeBattle2 winRef)
+        {
+            _windowRef = winRef;
+        }
+
+        public void Connect(string ip, int port)
         {
             bool ret = false;
+            _windowRef.labelConnectMessage.Text = "Connecting...";
             try
             {
                 _serverClient = new TcpClient(ip, port);
@@ -32,7 +39,8 @@ namespace SnakeBattle2
             {
                 Console.WriteLine(ex.Message);
             }
-            return ret;
+
+            _windowRef.ConnectionSucceeded(ret);
         }
         public void Listen()
         {
@@ -44,7 +52,6 @@ namespace SnakeBattle2
                 {
                     NetworkStream n = _serverClient.GetStream();
                     message = new BinaryReader(n).ReadString();
-
                     CommandListAdd(message);
                 }
             }
@@ -56,6 +63,7 @@ namespace SnakeBattle2
 
         private void CommandListAdd(string message)
         {
+            Console.WriteLine("received: " + message);
             var msg = MessageHandler.Deserialize(message);
             if (msg is UserNameMessage)
             {

@@ -11,7 +11,7 @@ namespace SnakeBattle2
     public class GraphicsEngine
     {
         private Board board;
-        private Game _game;
+        private SPGame _game;
         private float boardPixelWidth;
         private float boardPixelHeight;
         private int boardXOffset;
@@ -22,7 +22,7 @@ namespace SnakeBattle2
             this.Initialize(board, 0, 0);
         }
 
-        public GraphicsEngine(Board board, int xOffset, int yOffset, Game game)
+        public GraphicsEngine(Board board, int xOffset, int yOffset, SPGame game)
         {
             _game = game;
             this.Initialize(board, xOffset, yOffset);

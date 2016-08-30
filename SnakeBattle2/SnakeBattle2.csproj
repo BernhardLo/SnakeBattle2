@@ -55,8 +55,9 @@
     <Compile Include="ChatWindow.Designer.cs">
       <DependentUpon>ChatWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game.cs" />
+    <Compile Include="SPGame.cs" />
     <Compile Include="GraphicsEngine.cs" />
+    <Compile Include="MPGame.cs" />
     <Compile Include="MyComboBox.cs">
       <SubType>Component</SubType>
     </Compile>

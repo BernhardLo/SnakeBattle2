@@ -176,7 +176,7 @@ namespace SnakeBattle2
             this.labelXY.AutoSize = true;
             this.labelXY.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelXY.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.labelXY.Location = new System.Drawing.Point(898, 38);
+            this.labelXY.Location = new System.Drawing.Point(835, 37);
             this.labelXY.Name = "labelXY";
             this.labelXY.Size = new System.Drawing.Size(35, 13);
             this.labelXY.TabIndex = 7;
@@ -389,7 +389,7 @@ namespace SnakeBattle2
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(898, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(893, 24);
             this.menuStrip1.TabIndex = 30;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -506,7 +506,7 @@ namespace SnakeBattle2
             // buttonEnterServer
             // 
             this.buttonEnterServer.Font = new System.Drawing.Font("Sitka Text", 12F);
-            this.buttonEnterServer.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.buttonEnterServer.ForeColor = System.Drawing.Color.Green;
             this.buttonEnterServer.Location = new System.Drawing.Point(378, 187);
             this.buttonEnterServer.Name = "buttonEnterServer";
             this.buttonEnterServer.Size = new System.Drawing.Size(116, 41);
@@ -538,7 +538,7 @@ namespace SnakeBattle2
             // buttonConnectCancel
             // 
             this.buttonConnectCancel.Font = new System.Drawing.Font("Webdings", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.buttonConnectCancel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.buttonConnectCancel.ForeColor = System.Drawing.Color.Red;
             this.buttonConnectCancel.Location = new System.Drawing.Point(505, 187);
             this.buttonConnectCancel.Name = "buttonConnectCancel";
             this.buttonConnectCancel.Size = new System.Drawing.Size(50, 41);
@@ -550,7 +550,7 @@ namespace SnakeBattle2
             // buttonStartGameCancel
             // 
             this.buttonStartGameCancel.Font = new System.Drawing.Font("Webdings", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.buttonStartGameCancel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.buttonStartGameCancel.ForeColor = System.Drawing.Color.Red;
             this.buttonStartGameCancel.Location = new System.Drawing.Point(552, 432);
             this.buttonStartGameCancel.Name = "buttonStartGameCancel";
             this.buttonStartGameCancel.Size = new System.Drawing.Size(50, 45);
@@ -675,7 +675,7 @@ namespace SnakeBattle2
             // buttonMPrefresh
             // 
             this.buttonMPrefresh.Font = new System.Drawing.Font("Webdings", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.buttonMPrefresh.ForeColor = System.Drawing.Color.LawnGreen;
+            this.buttonMPrefresh.ForeColor = System.Drawing.Color.Green;
             this.buttonMPrefresh.Location = new System.Drawing.Point(295, 52);
             this.buttonMPrefresh.Name = "buttonMPrefresh";
             this.buttonMPrefresh.Size = new System.Drawing.Size(29, 29);
@@ -687,7 +687,7 @@ namespace SnakeBattle2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(898, 866);
+            this.ClientSize = new System.Drawing.Size(893, 866);
             this.Controls.Add(this.buttonMPrefresh);
             this.Controls.Add(this.labelMPlobby);
             this.Controls.Add(this.buttonMPleaveLobby);
@@ -803,7 +803,7 @@ namespace SnakeBattle2
         private System.Windows.Forms.Button buttonUserName;
         private System.Windows.Forms.Button buttonEnterServer;
         private System.Windows.Forms.ToolStripMenuItem runServerToolStripMenuItem;
-        private System.Windows.Forms.Label labelConnectMessage;
+        public System.Windows.Forms.Label labelConnectMessage;
         private System.Windows.Forms.Label labelUserNameMessage;
         private System.Windows.Forms.Button buttonConnectCancel;
         private System.Windows.Forms.Button buttonStartGameCancel;

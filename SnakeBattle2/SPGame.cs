@@ -10,13 +10,11 @@ using System.Windows.Forms;
 
 namespace SnakeBattle2
 {
-    public class Game
+    public class SPGame
     {
         Board _board;
         int _numberOfPlayers;
         public Player _player;
-        //private bool _myTurn; //OLD
-        private bool _firstTurn;
         private Color[] _availableColors;
         private List<Opponent> _opponents;
         private int _movesLeft = 2;
@@ -28,7 +26,7 @@ namespace SnakeBattle2
         bool _gameOn;
         bool _playerLost;
 
-        public Game(Board board, int numberOfPlayers, Player player, Color[] availableColors, SnakeBattle2 windowRef)
+        public SPGame(Board board, int numberOfPlayers, Player player, Color[] availableColors, SnakeBattle2 windowRef)
         {
             _windowRef = windowRef;
             _movesLeft = 2;

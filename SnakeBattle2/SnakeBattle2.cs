@@ -13,6 +13,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
+using System.Text.RegularExpressions;
+using MessagesLibrary;
+using System.Diagnostics;
 
 namespace SnakeBattle2
 {
@@ -22,13 +25,16 @@ namespace SnakeBattle2
         NetworkClient _nwc;
         Board _board;
         GraphicsEngine graphicsEngine;
+        Player _MPplayer;
         int _xOffset = 20;
         int _yOffset = 20;
         int _hexSize = 30;
         int _borderWidth = 2;
         public Color[] availableColors;
-        Game _currentGame;
+        SPGame _currentGame;
         Thread connectionThread;
+        Thread sendUserNameThread;
+        Thread validateUserNameThread;
         ChatWindow cw;
         public SnakeBattle2()
         {
@@ -36,8 +42,8 @@ namespace SnakeBattle2
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.DoubleBuffered = true;
-            _nwc = new NetworkClient();
             InitializeComponent();
+            _nwc = new NetworkClient(this);
             GoToMainMenu();
             availableColors = new Color[8] { Color.Red, Color.Blue, Color.Yellow, Color.Green, Color.Gray, Color.HotPink, Color.DarkOrange, Color.Purple };
             for (int i = 2; i <= 8; i++)
@@ -256,7 +262,7 @@ namespace SnakeBattle2
             board.BoardState.ActiveHexBorderColor = Color.Red;
             board.BoardState.ActiveHexBorderWidth = _borderWidth;
 
-            _currentGame = new Game(board, numberOfPlayers, player, availableColors, this);
+            _currentGame = new SPGame(board, numberOfPlayers, player, availableColors, this);
 
             this._board = board;
             this.graphicsEngine = new GraphicsEngine(board, _xOffset, _yOffset, _currentGame);
@@ -267,7 +273,8 @@ namespace SnakeBattle2
             buttonConnect.Show();
             textBoxConnect.Show();
             labelConnect.Show();
-
+            this.AcceptButton = buttonConnect;
+            this.ActiveControl = textBoxConnect;
             labelConnectMessage.Show();
             labelConnectMessage.Text = "";
             labelUserNameMessage.Show();
@@ -591,65 +598,102 @@ namespace SnakeBattle2
             GoToConnectToServer();
         }
 
-        private void buttonConnect_Click(object sender, EventArgs e)
+        private void buttonConnect_Click(object sender, EventArgs e) //connect to server
         {
             IPAddress ip;
 
-            if (buttonConnect.ForeColor == Color.Red) //start connection attempty
+            if (buttonConnect.ForeColor == Color.Red) //start connection attempt
             {
                 if (IPAddress.TryParse(textBoxConnect.Text, out ip)) //check if input is a valid ip address
                 {
                     bool ret = false;
                     connectionThread = new Thread(
-                        () => ret = _nwc.Connect(textBoxConnect.Text, _gamePort)
+                        () => _nwc.Connect(textBoxConnect.Text, _gamePort)
                     );
 
                     connectionThread.Start();
-                    connectionThread.Join();
-
-                    if (ret)
-                    {
-                        labelConnectMessage.Text = "Connection succeeded!";
-                        buttonUserName.Enabled = true;
-                        textBoxUserName.Enabled = true;
-                        textBoxConnect.Enabled = false;
-                        buttonConnect.ForeColor = Color.Green;
-                    }
-                    else
-                        labelConnectMessage.Text = "Connection failed.";
                 } else
                     labelConnectMessage.Text = "Not a valid IP address.";
                 
 
             } else if (buttonConnect.ForeColor == Color.Green)
             {
-                //todo disconnect from server
-                textBoxConnect.Clear(); 
+                labelConnectMessage.Text = "Disconnected.";
+                _nwc.Send("quit");
+                textBoxConnect.Clear();
+                textBoxConnect.Enabled = true;
+                textBoxUserName.Clear();
+                textBoxUserName.Enabled = false;
+                buttonUserName.ForeColor = Color.Red;
                 buttonConnect.ForeColor = Color.Red;
-                
+                buttonEnterServer.Enabled = false;
             }
 
         }
 
-        private string ConnectToServer()
+        public void ConnectionSucceeded (bool ret)
         {
-            string serverIP = "";
-            bool connected = false;
-            serverIP = textBoxConnect.Text; //method for checking if the input is a possible IP-adress
-            _nwc.Connect(serverIP, _gamePort); //method returning "true" if the connection succeeded
-            return serverIP;
+            if (ret)
+            {
+                labelConnectMessage.Text = "Connected to server.";
+                buttonUserName.Enabled = true;
+                textBoxUserName.Enabled = true;
+                textBoxConnect.Enabled = false;
+                buttonConnect.ForeColor = Color.Green;
+                this.ActiveControl = textBoxUserName;
+            }
+            else
+                labelConnectMessage.Text = "Connection failed.";
+        }
+
+        private bool CheckUserName (string userName)
+        {
+            bool valid = false;
+            if (!String.IsNullOrWhiteSpace(userName))
+            {
+
+                string pattern = @"^[a-zA-Z0-9åäöÅÄÖ]+$";
+                Match result = Regex.Match(userName, pattern);
+                if (userName.Length < 14 && userName.Length > 2 && userName != "<empty>" && result.Success)
+                {
+                    valid = true;
+                }
+                else
+                {
+                    labelUserNameMessage.Text = "User name invalid.";
+                }
+            }
+            else
+            {
+                labelUserNameMessage.Text = "Please enter a user name.";
+            }
+            return valid;
         }
 
         private void buttonUserName_Click(object sender, EventArgs e)
         {
             if (buttonUserName.ForeColor == Color.Red)
             {
-                //todo try to set user name
-                if (true)
+                buttonUserName.Enabled = false;
+                string userName = textBoxUserName.Text;
+
+                if (CheckUserName(textBoxUserName.Text))
                 {
-                    buttonUserName.ForeColor = Color.Green;
-                    buttonEnterServer.Enabled = true;
-                    textBoxUserName.Enabled = false;
+                    bool result = false;
+                    sendUserNameThread = new Thread(() => result = SendUserName(userName));
+                    sendUserNameThread.Start();
+                    if (result)
+                    {
+                        labelUserNameMessage.Text = "User name sent.";
+                    }
+                    //connect to server and check username
+                //    buttonUserName.ForeColor = Color.Green;
+                //    buttonEnterServer.Enabled = true;
+                //    textBoxUserName.Enabled = false;
+                //} else
+                //{
+                //    buttonUserName.Enabled = true;
+                //    buttonUserName.ForeColor = Color.Red;
                 }
 
             } else if (buttonUserName.ForeColor == Color.Green)
@@ -658,6 +702,82 @@ namespace SnakeBattle2
                 buttonEnterServer.Enabled = false;
                 textBoxUserName.Clear();
             }
+            this.AcceptButton = buttonEnterServer;
+            this.ActiveControl = null;
+        }
+
+        private bool SendUserName (string name)
+        {
+            bool result = false;
+            labelUserNameMessage.Text = "Sending user name to server.";
+            try
+            {
+                UserNameMessage unm = new UserNameMessage(name);
+                _nwc.Send(MessageHandler.Serialize(unm));
+                //bool validated = false;
+                validateUserNameThread = new Thread(() => ValidateUserName(name));
+                validateUserNameThread.Start();
+                //if (validated)
+                //{
+                //    labelUserNameMessage.Text = "User name set.";
+                //}
+                result = true;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                result = false;
+            }
+
+            return result;
+
+        }
+
+        private bool ValidateUserName (string userName)
+        {
+            bool valid = false;
+            Stopwatch myclock = new Stopwatch();
+            myclock.Start();
+            do
+            {
+                Thread.Sleep(50);
+                foreach (var item in _nwc._commandList)
+                {
+                    if (item is UserNameMessage)
+                    {
+                        UserNameMessage tmp = item as UserNameMessage;
+                        Console.WriteLine("time used: " + myclock.ElapsedMilliseconds);
+                        bool result = tmp.UserNameConfirm;
+                        _nwc._commandList.Remove(item);
+                        if (result)
+                        {
+                            _MPplayer = new Player(userName);
+                            labelUserNameMessage.Text = "User name set.";
+                            textBoxUserName.Enabled = false;
+                            buttonUserName.Enabled = false;
+                            buttonEnterServer.Enabled = true;
+                        }
+                        else
+                        {
+                            labelUserNameMessage.Text = "User name already taken";
+                            buttonUserName.Enabled = true;
+                        }
+                            
+
+                        return result;
+                    }
+                }
+
+
+                if (myclock.ElapsedMilliseconds > 10000)
+                {
+                    Console.WriteLine("User name validation timeout.");
+                    return false;
+                }
+            } while (!valid);
+
+            return false;
         }
 
         private void runServerToolStripMenuItem_Click(object sender, EventArgs e)
