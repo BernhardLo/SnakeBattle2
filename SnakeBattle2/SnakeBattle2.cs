@@ -468,6 +468,8 @@ namespace SnakeBattle2
 
         }
 
+
+        //test
         private void buttonNewMP_Click(object sender, EventArgs e)
         {
             GoToConnectToServer();
