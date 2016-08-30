@@ -8,9 +8,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server
+namespace SnakeBattle2Server
 {
-    class ClientHandler
+    public class ClientHandler
     {
         public string UserName { get; set; }
         public TcpClient tcpclient;

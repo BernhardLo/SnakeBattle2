@@ -1,5 +1,6 @@
 ﻿using GameLogic;
 using System;
+using SnakeBattle2Server;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,11 +12,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net;
 
 namespace SnakeBattle2
 {
     public partial class SnakeBattle2 : Form
     {
+        int _gamePort = 5000;
+        NetworkClient _nwc;
         Board _board;
         GraphicsEngine graphicsEngine;
         int _xOffset = 20;
@@ -24,23 +28,30 @@ namespace SnakeBattle2
         int _borderWidth = 2;
         public Color[] availableColors;
         Game _currentGame;
+        Thread connectionThread;
+        ChatWindow cw;
         public SnakeBattle2()
         {
             this.BackColor = Color.Black;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.DoubleBuffered = true;
+            _nwc = new NetworkClient();
             InitializeComponent();
             GoToMainMenu();
             availableColors = new Color[8] { Color.Red, Color.Blue, Color.Yellow, Color.Green, Color.Gray, Color.HotPink, Color.DarkOrange, Color.Purple };
             for (int i = 2; i <= 8; i++)
                 comboBoxPlayers.Items.Add(i);
             for (int i = 8; i <= 15; i++)
+            {
                 comboBoxFieldSize.Items.Add(i);
+                comboBoxMPfieldSize.Items.Add(i);
+            }
             foreach (var item in availableColors)
                 comboBoxMyColor.Items.Add(item.Name);
 
-            buttonWin.Location = new System.Drawing.Point(27, 280);
+
+            buttonWin.Location = new System.Drawing.Point(0, 280);
             buttonOpponent0.UseVisualStyleBackColor = false;
             buttonOpponent1.UseVisualStyleBackColor = false;
             buttonOpponent2.UseVisualStyleBackColor = false;
@@ -87,8 +98,15 @@ namespace SnakeBattle2
             textBoxConnect.Hide();
             buttonUserName.Hide();
             labelUserName.Hide();
+            labelConnectMessage.Hide();
+            labelConnectMessage.Text = "";
+            labelUserNameMessage.Hide();
+            labelUserNameMessage.Text = "";
             textBoxUserName.Hide();
             buttonEnterServer.Hide();
+
+            buttonConnectCancel.Hide();
+            buttonStartGameCancel.Hide();
 
             buttonOpponent0.Hide();
             buttonOpponent1.Hide();
@@ -107,6 +125,20 @@ namespace SnakeBattle2
             labelOpponent5.Hide();
             labelOpponent6.Hide();
             labelOpponent7.Hide();
+
+            labelMPavailableGames.Hide();
+            listBoxMPavailableGames.Hide();
+            buttonMPjoinGame.Hide();
+            buttonMPcreateGame.Hide();
+            buttonMPrefresh.Hide();
+
+            labelMPlobby.Hide();
+            listBoxMPplayerLobby.Hide();
+            buttonMPstartGame.Hide();
+            buttonMPleaveLobby.Hide();
+            buttonMPshowChat.Hide();
+            labelMPfieldSize.Hide();
+            comboBoxMPfieldSize.Hide();
         }
 
         public void GoToGameOptions()
@@ -131,6 +163,13 @@ namespace SnakeBattle2
             labelUserName.Hide();
             textBoxUserName.Hide();
             buttonEnterServer.Hide();
+            labelConnectMessage.Hide();
+            labelConnectMessage.Text = "";
+            labelUserNameMessage.Hide();
+            labelUserNameMessage.Text = "";
+
+            buttonConnectCancel.Hide();
+            buttonStartGameCancel.Show();
 
             buttonOpponent0.Hide();
             buttonOpponent1.Hide();
@@ -149,6 +188,20 @@ namespace SnakeBattle2
             labelOpponent5.Hide();
             labelOpponent7.Hide();
             labelOpponent6.Hide();
+
+            labelMPavailableGames.Hide();
+            listBoxMPavailableGames.Hide();
+            buttonMPjoinGame.Hide();
+            buttonMPcreateGame.Hide();
+            buttonMPrefresh.Hide();
+
+            labelMPlobby.Hide();
+            listBoxMPplayerLobby.Hide();
+            buttonMPstartGame.Hide();
+            buttonMPleaveLobby.Hide();
+            buttonMPshowChat.Hide();
+            labelMPfieldSize.Hide();
+            comboBoxMPfieldSize.Hide();
         }
 
         public void GoToGame()
@@ -173,6 +226,27 @@ namespace SnakeBattle2
             labelUserName.Hide();
             textBoxUserName.Hide();
             buttonEnterServer.Hide();
+            labelConnectMessage.Hide();
+            labelConnectMessage.Text = "";
+            labelUserNameMessage.Hide();
+            labelUserNameMessage.Text = "";
+
+            labelMPavailableGames.Hide();
+            listBoxMPavailableGames.Hide();
+            buttonMPjoinGame.Hide();
+            buttonMPcreateGame.Hide();
+            buttonMPrefresh.Hide();
+
+            labelMPlobby.Hide();
+            listBoxMPplayerLobby.Hide();
+            buttonMPstartGame.Hide();
+            buttonMPleaveLobby.Hide();
+            buttonMPshowChat.Hide();
+            labelMPfieldSize.Hide();
+            comboBoxMPfieldSize.Hide();
+
+            buttonConnectCancel.Hide();
+            buttonStartGameCancel.Hide();
 
             Board board = new Board(Convert.ToInt32(comboBoxFieldSize.Text),
             Convert.ToInt32(comboBoxFieldSize.Text), _hexSize, HexOrientation.Pointy);
@@ -194,6 +268,11 @@ namespace SnakeBattle2
             textBoxConnect.Show();
             labelConnect.Show();
 
+            labelConnectMessage.Show();
+            labelConnectMessage.Text = "";
+            labelUserNameMessage.Show();
+            labelUserNameMessage.Text = "";
+
             buttonUserName.Show();
             buttonUserName.Enabled = false;
             labelUserName.Show();
@@ -205,6 +284,38 @@ namespace SnakeBattle2
 
             buttonNewMP.Hide();
             buttonNewSP.Hide();
+            buttonConnectCancel.Show();
+            buttonStartGameCancel.Hide();
+
+        }
+
+        public void GoToEnterServer()
+        {
+            buttonConnect.Hide();
+            textBoxConnect.Hide();
+            labelConnect.Hide();
+
+            labelConnectMessage.Hide();
+            labelConnectMessage.Text = "";
+            labelUserNameMessage.Hide();
+            labelUserNameMessage.Text = "";
+
+            buttonUserName.Hide();
+            buttonUserName.Enabled = false;
+            labelUserName.Hide();
+            textBoxUserName.Hide();
+            textBoxUserName.Enabled = false;
+            buttonConnectCancel.Hide();
+
+            buttonEnterServer.Hide();
+            buttonEnterServer.Enabled = false;
+
+            labelMPavailableGames.Show();
+            listBoxMPavailableGames.Show();
+            buttonMPjoinGame.Show();
+            buttonMPcreateGame.Show();
+            buttonMPrefresh.Show();
+            buttonMPshowChat.Show();
 
         }
 
@@ -351,6 +462,11 @@ namespace SnakeBattle2
             }
         }
 
+        public void ChatButtonGreenOnExit()
+        {
+            buttonMPshowChat.ForeColor = Color.Green;
+        }
+
         public void Form_Paint(object sender, PaintEventArgs e)
         {
             //Draw the graphics/GUI
@@ -477,17 +593,34 @@ namespace SnakeBattle2
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
-            if (buttonConnect.ForeColor == Color.Red)
-            {
-                //todo connect to server
+            IPAddress ip;
 
-                if (true) //connection succeeded
+            if (buttonConnect.ForeColor == Color.Red) //start connection attempty
+            {
+                if (IPAddress.TryParse(textBoxConnect.Text, out ip)) //check if input is a valid ip address
                 {
-                    buttonUserName.Enabled = true;
-                    textBoxUserName.Enabled = true;
-                    textBoxConnect.Enabled = false;
-                    buttonConnect.ForeColor = Color.Green;
-                }
+                    bool ret = false;
+                    connectionThread = new Thread(
+                        () => ret = _nwc.Connect(textBoxConnect.Text, _gamePort)
+                    );
+
+                    connectionThread.Start();
+                    connectionThread.Join();
+
+                    if (ret)
+                    {
+                        labelConnectMessage.Text = "Connection succeeded!";
+                        buttonUserName.Enabled = true;
+                        textBoxUserName.Enabled = true;
+                        textBoxConnect.Enabled = false;
+                        buttonConnect.ForeColor = Color.Green;
+                    }
+                    else
+                        labelConnectMessage.Text = "Connection failed.";
+                } else
+                    labelConnectMessage.Text = "Not a valid IP address.";
+                
+
             } else if (buttonConnect.ForeColor == Color.Green)
             {
                 //todo disconnect from server
@@ -496,6 +629,15 @@ namespace SnakeBattle2
                 
             }
 
+        }
+
+        private string ConnectToServer()
+        {
+            string serverIP = "";
+            bool connected = false;
+            serverIP = textBoxConnect.Text; //method for checking if the input is a possible IP-adress
+            _nwc.Connect(serverIP, _gamePort); //method returning "true" if the connection succeeded
+            return serverIP;
         }
 
         private void buttonUserName_Click(object sender, EventArgs e)
@@ -516,6 +658,85 @@ namespace SnakeBattle2
                 buttonEnterServer.Enabled = false;
                 textBoxUserName.Clear();
             }
+        }
+
+        private void runServerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SnakeBattle2Server.Program.Main(new string[] { "asdf" });
+            //SnakeBattle2Server.Program sb2s = new SnakeBattle2Server.Program();
+            //sb2s.Main(new string[] {"asdf", "asdf" });
+        }
+
+        private void textBoxConnect_TextChanged(object sender, EventArgs e)
+        {
+            labelConnectMessage.Text = "";
+        }
+
+        private void textBoxUserName_TextChanged(object sender, EventArgs e)
+        {
+            labelUserNameMessage.Text = "";
+        }
+
+        private void buttonConnectCancel_Click(object sender, EventArgs e)
+        {
+            GoToMainMenu();
+        }
+
+        private void buttonStartGameCancel_Click(object sender, EventArgs e)
+        {
+            GoToMainMenu();
+
+        }
+
+        private void buttonMPshowChat_Click(object sender, EventArgs e)
+        {
+            if (buttonMPshowChat.ForeColor == Color.Green)
+            {
+                cw = new ChatWindow(this);
+                cw.Show();
+                buttonMPshowChat.ForeColor = Color.Red;
+            } else if (buttonMPshowChat.ForeColor == Color.Red)
+            {
+                cw.Hide();
+                buttonMPshowChat.ForeColor = Color.Green;
+            }
+        }
+
+        private void buttonMPstartGame_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonMPleaveLobby_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonMPjoinGame_Click(object sender, EventArgs e)
+        {
+            labelMPlobby.Show();
+            listBoxMPplayerLobby.Show();
+            buttonMPstartGame.Show();
+            buttonMPleaveLobby.Show();
+            labelMPfieldSize.Show();
+            comboBoxMPfieldSize.Show();
+            comboBoxMPfieldSize.Enabled = false;
+        }
+
+        private void buttonMPcreateGame_Click(object sender, EventArgs e)
+        {
+            labelMPlobby.Show();
+            listBoxMPplayerLobby.Show();
+            buttonMPstartGame.Show();
+            buttonMPleaveLobby.Show();
+            labelMPfieldSize.Show();
+            comboBoxMPfieldSize.Show();
+            comboBoxMPfieldSize.Enabled = true;
+        }
+
+        private void buttonEnterServer_Click(object sender, EventArgs e)
+        {
+            GoToEnterServer();
         }
     }
 }

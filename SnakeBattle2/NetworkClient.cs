@@ -20,22 +20,20 @@ namespace SnakeBattle2
 
         public bool Connect(string ip, int port)
         {
-            bool connectSucceeded = false;
-
+            bool ret = false;
             try
             {
                 _serverClient = new TcpClient(ip, port);
                 Thread listenerThread = new Thread(Listen);
                 listenerThread.Start();
-                connectSucceeded = true;
+                ret = true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            return connectSucceeded;
+            return ret;
         }
-
         public void Listen()
         {
             string message = "";

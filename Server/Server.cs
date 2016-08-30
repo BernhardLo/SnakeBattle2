@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Server
+namespace SnakeBattle2Server
 {
-    class Server : IDisposable
+    public class Server : IDisposable
     {
         TcpListener listener;
         List<ClientHandler> _clients = new List<ClientHandler>();

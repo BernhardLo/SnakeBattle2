@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnakeBattle2", "SnakeBattle
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagesLibrary", "MessagesLibrary\MessagesLibrary.csproj", "{32926505-D140-47F9-82ED-06BAEEE639F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{2DBAB862-8607-48A2-BF1D-0E1034E69C6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnakeBattle2Server", "Server\SnakeBattle2Server.csproj", "{2DBAB862-8607-48A2-BF1D-0E1034E69C6D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameLogic", "GameLogic\GameLogic.csproj", "{538FB5EF-A737-4539-8E31-6790FB97FF5B}"
 EndProject

@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Server
+namespace SnakeBattle2Server
 {
-    class Program
+    public class Program
     {
         public static Server myServer;
 
@@ -44,7 +44,7 @@ namespace Server
 
 
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             SetConsoleCtrlHandler(new HandlerRoutine(ConsoleCtrlCheck), true);
 

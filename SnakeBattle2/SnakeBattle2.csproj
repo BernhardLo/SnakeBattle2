@@ -49,6 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChatWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChatWindow.Designer.cs">
+      <DependentUpon>ChatWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Game.cs" />
     <Compile Include="GraphicsEngine.cs" />
     <Compile Include="MyComboBox.cs">
@@ -63,6 +69,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ChatWindow.resx">
+      <DependentUpon>ChatWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SnakeBattle2.resx">
       <DependentUpon>SnakeBattle2.cs</DependentUpon>
     </EmbeddedResource>
@@ -96,6 +105,10 @@
     <ProjectReference Include="..\MessagesLibrary\MessagesLibrary.csproj">
       <Project>{32926505-D140-47F9-82ED-06BAEEE639F2}</Project>
       <Name>MessagesLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Server\SnakeBattle2Server.csproj">
+      <Project>{2dbab862-8607-48a2-bf1d-0e1034e69c6d}</Project>
+      <Name>SnakeBattle2Server</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
