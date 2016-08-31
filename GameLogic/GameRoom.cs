@@ -17,5 +17,9 @@ namespace GameLogic
             PlayerList = new List<Player>();
             hasStarted = false;
         }
+        public GameRoom()
+        {
+
+        }
     }
 }

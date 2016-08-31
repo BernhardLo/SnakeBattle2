@@ -26,6 +26,8 @@ namespace MessagesLibrary
                 command = "sg";
             else if (obj is NewLobbyMessage)
                 command = "nl";
+            else if (obj is KickMessage)
+                command = "km";
             else if (obj is ChatMessage)
                 command = "cm";
             else
@@ -56,6 +58,8 @@ namespace MessagesLibrary
                 result = JsonConvert.DeserializeObject<StartGameMessage>(message);
             else if (commandType == "nl")
                 result = JsonConvert.DeserializeObject<NewLobbyMessage>(message);
+            else if (commandType == "km")
+                result = JsonConvert.DeserializeObject<KickMessage>(message);
             else if (commandType == "cm")
                 result = JsonConvert.DeserializeObject<ChatMessage>(message);
             else

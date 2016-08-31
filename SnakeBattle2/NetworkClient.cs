@@ -93,13 +93,24 @@ namespace SnakeBattle2
             }
             else if (msg is JoinGameMessage)
             {
+                Console.WriteLine("received join game message");
+                JoinGameMessage tmp = msg as JoinGameMessage;
                 if (msg.UserName == _filterUserName)
                     _commandList.Add(msg);
+                else
+                {
+                    Console.WriteLine("couldnt join game");
+                }
             }
             else if (msg is ChatMessage)
             {
                 Console.WriteLine("received chatmessage " +message);
                 _commandList.Add(msg);
+            } else if (msg is KickMessage)
+            {
+                Console.WriteLine("Received kick message");
+                if (msg.UserName == _filterUserName)
+                    _commandList.Add(msg);
             }
             else if (msg is ErrorMessage)
             {

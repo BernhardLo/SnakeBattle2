@@ -338,13 +338,13 @@ namespace SnakeBattle2
             buttonMPrefresh.Show();
             buttonMPshowChat.Show();
             buttonMPleaveServer.Show();
-
         }
 
         public void GoToLobby (bool host)
         {
-            buttonMPjoinGame.Enabled = false;
-            buttonMPcreateGame.Enabled = false;
+            buttonMPjoinGame.Hide();
+            buttonMPcreateGame.Hide();
+            buttonMPleaveLobby.Show();
             labelMPlobby.Show();
             listBoxMPplayerLobby.Show();
             buttonMPleaveLobby.Show();
@@ -361,6 +361,7 @@ namespace SnakeBattle2
 
         public void GoToFindGame ()
         {
+            listBoxMPplayerLobby.Items.Clear();
             labelMPlobby.Hide();
             listBoxMPplayerLobby.Hide();
             buttonMPstartGame.Enabled = false;
@@ -592,11 +593,6 @@ namespace SnakeBattle2
             {
 
             }
-        }
-
-        private void textBoxPlayerName_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void SnakeBattle2_Load(object sender, EventArgs e)
@@ -901,7 +897,9 @@ namespace SnakeBattle2
         private void buttonMPleaveLobby_Click(object sender, EventArgs e)
         {
             if (_MPplayer.Name == _currentLobby.HostName) //destroy lobby, kick all players
-                _nwc.Send(MessageHandler.Serialize(new NewLobbyMessage(_MPplayer.Name) { Create = false }));
+                _nwc.Send(MessageHandler.Serialize(new NewLobbyMessage(_MPplayer.Name, false)));
+            else
+                _nwc.Send(MessageHandler.Serialize(new KickMessage(_MPplayer.Name)));
 
         }
 
@@ -909,19 +907,25 @@ namespace SnakeBattle2
         {
             if (listBoxMPavailableGames.SelectedIndex != -1)
             {
-                GoToLobby(false); //go to lobby as player
+                int idx = listBoxMPavailableGames.SelectedItem.ToString().IndexOf("|");
+                string hostname = listBoxMPavailableGames.SelectedItem.ToString();
+                hostname = hostname.Substring(0, idx - 1);
+                _currentLobby = new GameRoom(hostname);
+                JoinGameMessage jgm = new JoinGameMessage(_MPplayer.Name) { HostName = hostname , Confirmed = false };
+                _nwc.Send(MessageHandler.Serialize(jgm));
             }
         }
 
         private void buttonMPcreateGame_Click(object sender, EventArgs e)
         {
-            GoToLobby(true); //go to lobby as host
-            _currentLobby = new GameRoom(_MPplayer.Name);
-            NewLobbyMessage nlm = new NewLobbyMessage(_MPplayer.Name) { Create = true };
+            NewLobbyMessage nlm = new NewLobbyMessage(_MPplayer.Name, true);
             try
             {
                 Console.WriteLine($"Sending: {MessageHandler.Serialize(nlm)}");
                 _nwc.Send(MessageHandler.Serialize(nlm));
+                GoToLobby(true); //go to lobby as host
+                _currentLobby = new GameRoom(_MPplayer.Name);
+                listBoxMPplayerLobby.Items.Add(_MPplayer.Name);
             } catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
@@ -943,21 +947,14 @@ namespace SnakeBattle2
         }
 
 
-
-
         private void ReadCommandList ()
         {
             Console.WriteLine("Awaiting messages...");
-            List<MessagesLibrary.Message> tmpRemove = new List<MessagesLibrary.Message>();
 
             do
             {
                 MessagesLibrary.Message msg = msgQ.ReadMessage();
 
-                //tmpRemove.Clear();
-                //Thread.Sleep(100);
-                //foreach (var item in _nwc._commandList)
-                //{
                 if (msg is FindGameMessage)
                 {
                     listBoxMPavailableGames.Items.Clear();
@@ -966,34 +963,53 @@ namespace SnakeBattle2
                     foreach (var gm in tmpMsg.GamesAvailable)
                     {
                         if (gm.hasStarted)
-                            listBoxMPavailableGames.Items.Add($"{gm.HostName} ({gm.PlayerList.Count}/8) [Game has started]");
+                            listBoxMPavailableGames.Items.Add($"{gm.HostName} | ({gm.PlayerList.Count}/8) [Game has started]");
                         else
-                            listBoxMPavailableGames.Items.Add($"{gm.HostName} ({gm.PlayerList.Count}/8) [Available]");
+                            listBoxMPavailableGames.Items.Add($"{gm.HostName} | ({gm.PlayerList.Count}/8) [Available]");
                     }
-                    //tmpRemove.Add(item);
                 }
                 else if (msg is ChatMessage)
                 {
                     ChatMessage tmpmsg = msg as ChatMessage;
-                    if (cw != null)
+                    try
+                    {
                         cw.receiveMessage(tmpmsg.Message);
+                    } catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
 
-                } else if (msg is PlayMessage)
+                } else if (msg is JoinGameMessage)
+                {
+
+                    JoinGameMessage tmpmsg = msg as JoinGameMessage;
+                    if (tmpmsg.Confirmed)
+                    {
+                        GoToLobby(false); //todo denna får programmet att krascha
+                        listBoxMPplayerLobby.Items.Add(_MPplayer.Name);
+                    } else
+                    {
+                        GoToFindGame();
+                    }
+                }
+                else if (msg is KickMessage) //todo handle kicked from lobby
+                {
+                    Console.WriteLine();
+                    GoToFindGame();
+                }
+                else if (msg is PlayMessage)
                 {
 
                 }
-                //}
-                
-                //foreach (var item in tmpRemove)
-                //{
-                //    _nwc._commandList.Remove(item);
-                //}
+
 
             } while (true);
         }
 
         private void buttonMPleaveServer_Click(object sender, EventArgs e)
         {
+            
+            _nwc.Send("quit");
             KillThread();
             GoToMainMenu();
         }

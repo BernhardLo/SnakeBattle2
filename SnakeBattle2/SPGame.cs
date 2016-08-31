@@ -35,7 +35,6 @@ namespace SnakeBattle2
             _player = player;
             _player.MyTurn = true;
             _player.IsFirstTurn = true;
-            //_firstTurn = true; //OLD
             _availableColors = availableColors;
             _gameOn = true;
             _playerLost = false;

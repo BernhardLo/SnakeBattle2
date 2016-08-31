@@ -255,7 +255,7 @@ namespace SnakeBattle2Server
 
 
             }
-            Console.WriteLine("Server Shuting down");
+            Console.WriteLine("Server Shutting down");
             if (listener != null)
                 listener.Stop();
         }

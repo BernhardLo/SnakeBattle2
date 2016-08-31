@@ -57,6 +57,13 @@ namespace SnakeBattle2
                 {
                     Console.WriteLine("Chat message received");
                     msgQueue.Add(msg);
+                } else if (msg is KickMessage)
+                {
+                    if (msg.UserName == _filterUserName)
+                    {
+                        Console.WriteLine("Kick message received");
+                        msgQueue.Add(msg);
+                    }
                 }
                 else if (msg is ErrorMessage)
                 {
