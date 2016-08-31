@@ -704,6 +704,7 @@ namespace SnakeBattle2
             this.buttonMPrefresh.TabIndex = 55;
             this.buttonMPrefresh.Text = "q";
             this.buttonMPrefresh.UseVisualStyleBackColor = false;
+            this.buttonMPrefresh.Click += new System.EventHandler(this.buttonMPrefresh_Click);
             // 
             // buttonMPleaveServer
             // 
@@ -716,6 +717,7 @@ namespace SnakeBattle2
             this.buttonMPleaveServer.TabIndex = 56;
             this.buttonMPleaveServer.Text = "Leave Server";
             this.buttonMPleaveServer.UseVisualStyleBackColor = false;
+            this.buttonMPleaveServer.Click += new System.EventHandler(this.buttonMPleaveServer_Click);
             // 
             // SnakeBattle2
             // 

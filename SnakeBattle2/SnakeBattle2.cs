@@ -36,7 +36,11 @@ namespace SnakeBattle2
         Thread connectionThread;
         Thread sendUserNameThread;
         Thread validateUserNameThread;
+        Thread listenForMsg;
+        Thread disableRefresh;
         ChatWindow cw;
+        MessageQueue msgQ;
+
         public SnakeBattle2()
         {
             this.BackColor = Color.Black;
@@ -44,7 +48,9 @@ namespace SnakeBattle2
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.DoubleBuffered = true;
             InitializeComponent();
-            _nwc = new NetworkClient(this);
+            msgQ = new MessageQueue();
+            CheckForIllegalCrossThreadCalls = false;
+            _nwc = new NetworkClient(this, msgQ);
             GoToMainMenu();
             availableColors = new Color[8] { Color.Red, Color.Blue, Color.Yellow, Color.Green, Color.Gray, Color.HotPink, Color.DarkOrange, Color.Purple };
             for (int i = 2; i <= 8; i++)
@@ -301,6 +307,8 @@ namespace SnakeBattle2
         {
             _MPplayer = new Player(textBoxUserName.Text);
             Console.WriteLine($"Player {_MPplayer.Name} was created"); //create player locally
+            listenForMsg = new Thread(ReadCommandList);
+            listenForMsg.Start();
             buttonConnect.Hide();
             textBoxConnect.Hide();
             labelConnect.Hide();
@@ -351,6 +359,13 @@ namespace SnakeBattle2
         public void GoToFindGame ()
         {
 
+        }
+
+        private void DisableRefreshButton ()
+        {
+            buttonMPrefresh.Enabled = false;
+            Thread.Sleep(1400);
+            buttonMPrefresh.Enabled = true;
         }
 
         private void buttonNewSP_Click(object sender, EventArgs e)
@@ -413,9 +428,13 @@ namespace SnakeBattle2
             }
         }
 
-        public void PlayerWins()
+        public void KillThread()
         {
-
+            if (listenForMsg != null)
+            {
+                listenForMsg.Abort();
+                listenForMsg = null;
+            }
         }
 
         public void OpponentLost (int i)
@@ -536,6 +555,7 @@ namespace SnakeBattle2
             {
                 cw.KillTheThread();
             }
+            KillThread();
         }
 
         private void Form_MouseClick(object sender, MouseEventArgs e)
@@ -874,17 +894,97 @@ namespace SnakeBattle2
 
         private void buttonMPjoinGame_Click(object sender, EventArgs e)
         {
-            GoToLobby(false);
+            if (listBoxMPavailableGames.SelectedIndex != -1)
+            {
+                GoToLobby(false); //go to lobby as player
+            }
         }
 
         private void buttonMPcreateGame_Click(object sender, EventArgs e)
         {
-            GoToLobby(true);
+            GoToLobby(true); //go to lobby as host
+            NewLobbyMessage nlm = new NewLobbyMessage(_MPplayer.Name) { Create = true };
+            try
+            {
+                Console.WriteLine($"Sending: {MessageHandler.Serialize(nlm)}");
+                _nwc.Send(MessageHandler.Serialize(nlm));
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void buttonEnterServer_Click(object sender, EventArgs e)
         {
             GoToEnterServer();
+        }
+
+        private void buttonMPrefresh_Click(object sender, EventArgs e)
+        {
+            disableRefresh = new Thread(DisableRefreshButton);
+            disableRefresh.Start();
+            FindGameMessage fg = new FindGameMessage(_MPplayer.Name);
+            Console.WriteLine("Sending request for game list");
+            _nwc.Send(MessageHandler.Serialize(fg));
+        }
+
+
+
+
+        private void ReadCommandList ()
+        {
+            Console.WriteLine("Awaiting messages...");
+            List<MessagesLibrary.Message> tmpRemove = new List<MessagesLibrary.Message>();
+
+            do
+            {
+                //Message msg = Queue.ReadItem();
+
+                tmpRemove.Clear();
+                Thread.Sleep(100);
+                foreach (var item in _nwc._commandList)
+                {
+                    if (item is FindGameMessage)
+                    {
+                        Console.WriteLine("Received a list of available games");
+                        listBoxMPavailableGames.Items.Add($"<available games>");
+                        var msg = item as FindGameMessage;
+                        Console.WriteLine("TEST "+MessageHandler.Serialize(msg));
+                        foreach (var gm in msg.GamesAvailable)
+                        {
+                            if (gm.hasStarted)
+                                listBoxMPavailableGames.Items.Add($"{gm.HostName} ({gm.PlayerList.Count}/8) [Game has started]");
+                            else
+                                listBoxMPavailableGames.Items.Add($"{gm.HostName} ({gm.PlayerList.Count}/8) [Available]");
+                        }
+                        tmpRemove.Add(item);
+                    }
+                    else if (item is ChatMessage)
+                    {
+                        //ChatMessage cm = item as ChatMessage;
+                        //string print = cm.Message;
+                        //if (cm.UserName != _windowRef._MPplayer.Name)
+                        //    receiveMessage(cm.Message);
+                        //tmpRemove.Add(item as ChatMessage);
+
+                    } else if (item is PlayMessage)
+                    {
+
+                    }
+                }
+                
+                foreach (var item in tmpRemove)
+                {
+                    _nwc._commandList.Remove(item);
+                }
+
+            } while (true);
+        }
+
+        private void buttonMPleaveServer_Click(object sender, EventArgs e)
+        {
+            KillThread();
+            GoToMainMenu();
         }
     }
 }

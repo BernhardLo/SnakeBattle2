@@ -55,6 +55,7 @@
     <Compile Include="ChatWindow.Designer.cs">
       <DependentUpon>ChatWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="MessageQueue.cs" />
     <Compile Include="SPGame.cs" />
     <Compile Include="GraphicsEngine.cs" />
     <Compile Include="MPGame.cs" />

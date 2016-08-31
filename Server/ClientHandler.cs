@@ -49,24 +49,30 @@ namespace SnakeBattle2Server
                         response.TurnCount++;
                         myServer.Broadcast(MessageHandler.Serialize(response));
                     }
-                    else if (msg is NewGameMessage)
-                    {
-                        NewGameMessage tmp = msg as NewGameMessage;
-                        GameRoom room = new GameRoom() { HostName = tmp.UserName };
-                        Player tmpPlayer = new Player(tmp.UserName);
-                        room.PlayerList.Add(tmpPlayer);
-                        myServer._games.Add(room);
-                    }
+                    //else if (msg is NewGameMessage)
+                    //{
+                    //    NewGameMessage tmp = msg as NewGameMessage;
+                    //    GameRoom room = new GameRoom() { HostName = tmp.UserName };
+                    //    Player tmpPlayer = new Player(tmp.UserName);
+                    //    room.PlayerList.Add(tmpPlayer);
+                    //    myServer._games.Add(room);
+                    //}
                     else if (msg is NewLobbyMessage)
                     {
                         NewLobbyMessage tmp = msg as NewLobbyMessage;
                         if (tmp.Create) //todo create lobby
                         {
-                            GameRoom room = new GameRoom() { HostName = tmp.UserName };
-                            Player tmpPlayer = new Player(tmp.UserName);
-                        } else //todo remove lobby
+                            GameRoom room = new GameRoom(tmp.UserName);
+                            room.PlayerList.Add(new Player(tmp.UserName));
+                            myServer._games.Add(room);
+                        }
+                        //} else //todo remove lobby
+                        //{
+                        //    myServer._games.RemoveAll(x => x.HostName == tmp.UserName);
+                        //}
+                        foreach (var item in myServer._games)
                         {
-
+                            Console.WriteLine("Game name: " + item.HostName);
                         }
                     }
                     else if (msg is FindGameMessage)

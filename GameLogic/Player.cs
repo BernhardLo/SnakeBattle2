@@ -18,6 +18,10 @@ namespace GameLogic
         public bool IsFirstTurn { get; set; }
         public bool MyTurn { get; set; }
 
+        public Player()
+        {
+            Name = "<empty>";
+        }
         public Player(string name, Color color)
         {
             Name = name;

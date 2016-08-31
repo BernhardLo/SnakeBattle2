@@ -10,9 +10,12 @@ namespace GameLogic
     {
         public List<Player> PlayerList { get; set; }
         public string HostName { get; set; }
-        public GameRoom()
+        public bool hasStarted { get; set; }
+        public GameRoom(string hostName)
         {
+            HostName = hostName;
             PlayerList = new List<Player>();
+            hasStarted = false;
         }
     }
 }

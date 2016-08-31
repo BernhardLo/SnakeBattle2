@@ -18,10 +18,12 @@ namespace SnakeBattle2
         internal string _filterUserName = "<empty>";
         internal string _filterHostName = "<empty>";
         SnakeBattle2 _windowRef;
+        MessageQueue msgQ;
 
-        public NetworkClient(SnakeBattle2 winRef)
+        public NetworkClient(SnakeBattle2 winRef, MessageQueue q)
         {
             _windowRef = winRef;
+            msgQ = q;
         }
 
         public void Connect(string ip, int port)
@@ -59,6 +61,7 @@ namespace SnakeBattle2
             {
                 Debug.WriteLine(ex.Message);
             }
+            
         }
 
         private void CommandListAdd(string message)
