@@ -54,7 +54,8 @@ namespace SnakeBattle2
                 {
                     NetworkStream n = _serverClient.GetStream();
                     message = new BinaryReader(n).ReadString();
-                    CommandListAdd(message);
+                    msgQ.AddMessage(MessageHandler.Deserialize(message));
+                    //CommandListAdd(message); //todo old queue
                 }
             }
             catch (Exception ex)

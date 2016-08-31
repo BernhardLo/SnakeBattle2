@@ -65,11 +65,12 @@ namespace SnakeBattle2Server
                             GameRoom room = new GameRoom(tmp.UserName);
                             room.PlayerList.Add(new Player(tmp.UserName));
                             myServer._games.Add(room);
+                        
+                        } else //todo remove lobby
+                        {
+                            //todo kick all users
+                            myServer._games.RemoveAll(x => x.HostName == tmp.UserName);
                         }
-                        //} else //todo remove lobby
-                        //{
-                        //    myServer._games.RemoveAll(x => x.HostName == tmp.UserName);
-                        //}
                         foreach (var item in myServer._games)
                         {
                             Console.WriteLine("Game name: " + item.HostName);

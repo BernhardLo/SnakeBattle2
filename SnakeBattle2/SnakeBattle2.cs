@@ -31,6 +31,8 @@ namespace SnakeBattle2
         int _hexSize = 30;
         int _borderWidth = 2;
         public Color[] availableColors;
+        GameRoom _currentLobby;
+        MPGame _currentMPGame;
         SPGame _currentGame;
         public MPGame _currentMPgame;
         Thread connectionThread;
@@ -307,6 +309,7 @@ namespace SnakeBattle2
         {
             _MPplayer = new Player(textBoxUserName.Text);
             Console.WriteLine($"Player {_MPplayer.Name} was created"); //create player locally
+            msgQ._filterUserName = _MPplayer.Name;
             listenForMsg = new Thread(ReadCommandList);
             listenForMsg.Start();
             buttonConnect.Hide();
@@ -358,7 +361,18 @@ namespace SnakeBattle2
 
         public void GoToFindGame ()
         {
-
+            labelMPlobby.Hide();
+            listBoxMPplayerLobby.Hide();
+            buttonMPstartGame.Enabled = false;
+            buttonMPstartGame.Hide();
+            buttonMPleaveLobby.Enabled = false;
+            buttonMPleaveLobby.Hide();
+            comboBoxMPfieldSize.Hide();
+            labelMPfieldSize.Hide();
+            buttonMPjoinGame.Enabled = true;
+            buttonMPjoinGame.Show();
+            buttonMPcreateGame.Enabled = true;
+            buttonMPcreateGame.Show();
         }
 
         private void DisableRefreshButton ()
@@ -726,38 +740,35 @@ namespace SnakeBattle2
             myclock.Start();
             do
             {
-                Thread.Sleep(50);
-                foreach (var item in _nwc._commandList)
+                var msg = msgQ.ReadMessage();
+
+                if (msg is UserNameMessage)
                 {
-                    if (item is UserNameMessage)
+                    UserNameMessage tmp = msg as UserNameMessage;
+                    Console.WriteLine("time used: " + myclock.ElapsedMilliseconds);
+                    bool result = tmp.UserNameConfirm;
+                    if (result)
                     {
-                        UserNameMessage tmp = item as UserNameMessage;
-                        Console.WriteLine("time used: " + myclock.ElapsedMilliseconds);
-                        bool result = tmp.UserNameConfirm;
-                        _nwc._commandList.Remove(item);
-                        if (result)
-                        {
-                            //_MPplayer = new Player(userName); //todo remove this
-                            labelUserNameMessage.Text = "User name set.";
-                            textBoxUserName.Enabled = false;
-                            buttonUserName.Enabled = false;
-                            buttonEnterServer.Enabled = true;
-                        }
-                        else
-                        {
-                            labelUserNameMessage.Text = "User name already taken";
-                            buttonUserName.Enabled = true;
-                        }
-
-
-                        return result;
+                        labelUserNameMessage.Text = "User name set.";
+                        textBoxUserName.Enabled = false;
+                        buttonUserName.Enabled = false;
+                        buttonEnterServer.Enabled = true;
                     }
-                }
+                    else
+                    {
+                        labelUserNameMessage.Text = "User name already taken";
+                        buttonUserName.Enabled = true;
+                    }
 
+
+                    return result;
+                }
 
                 if (myclock.ElapsedMilliseconds > 10000)
                 {
                     Console.WriteLine("User name validation timeout.");
+                    buttonUserName.Enabled = true;
+                    textBoxUserName.Enabled = true;
                     return false;
                 }
             } while (!valid);
@@ -889,6 +900,8 @@ namespace SnakeBattle2
 
         private void buttonMPleaveLobby_Click(object sender, EventArgs e)
         {
+            if (_MPplayer.Name == _currentLobby.HostName) //destroy lobby, kick all players
+                _nwc.Send(MessageHandler.Serialize(new NewLobbyMessage(_MPplayer.Name) { Create = false }));
 
         }
 
@@ -903,6 +916,7 @@ namespace SnakeBattle2
         private void buttonMPcreateGame_Click(object sender, EventArgs e)
         {
             GoToLobby(true); //go to lobby as host
+            _currentLobby = new GameRoom(_MPplayer.Name);
             NewLobbyMessage nlm = new NewLobbyMessage(_MPplayer.Name) { Create = true };
             try
             {
@@ -938,45 +952,42 @@ namespace SnakeBattle2
 
             do
             {
-                //Message msg = Queue.ReadItem();
+                MessagesLibrary.Message msg = msgQ.ReadMessage();
 
-                tmpRemove.Clear();
-                Thread.Sleep(100);
-                foreach (var item in _nwc._commandList)
+                //tmpRemove.Clear();
+                //Thread.Sleep(100);
+                //foreach (var item in _nwc._commandList)
+                //{
+                if (msg is FindGameMessage)
                 {
-                    if (item is FindGameMessage)
+                    listBoxMPavailableGames.Items.Clear();
+                    Console.WriteLine("Received a list of available games");
+                    var tmpMsg = msg as FindGameMessage;
+                    foreach (var gm in tmpMsg.GamesAvailable)
                     {
-                        Console.WriteLine("Received a list of available games");
-                        listBoxMPavailableGames.Items.Add($"<available games>");
-                        var msg = item as FindGameMessage;
-                        Console.WriteLine("TEST "+MessageHandler.Serialize(msg));
-                        foreach (var gm in msg.GamesAvailable)
-                        {
-                            if (gm.hasStarted)
-                                listBoxMPavailableGames.Items.Add($"{gm.HostName} ({gm.PlayerList.Count}/8) [Game has started]");
-                            else
-                                listBoxMPavailableGames.Items.Add($"{gm.HostName} ({gm.PlayerList.Count}/8) [Available]");
-                        }
-                        tmpRemove.Add(item);
+                        if (gm.hasStarted)
+                            listBoxMPavailableGames.Items.Add($"{gm.HostName} ({gm.PlayerList.Count}/8) [Game has started]");
+                        else
+                            listBoxMPavailableGames.Items.Add($"{gm.HostName} ({gm.PlayerList.Count}/8) [Available]");
                     }
-                    else if (item is ChatMessage)
-                    {
-                        //ChatMessage cm = item as ChatMessage;
-                        //string print = cm.Message;
-                        //if (cm.UserName != _windowRef._MPplayer.Name)
-                        //    receiveMessage(cm.Message);
-                        //tmpRemove.Add(item as ChatMessage);
-
-                    } else if (item is PlayMessage)
-                    {
-
-                    }
+                    //tmpRemove.Add(item);
                 }
+                else if (msg is ChatMessage)
+                {
+                    ChatMessage tmpmsg = msg as ChatMessage;
+                    if (cw != null)
+                        cw.receiveMessage(tmpmsg.Message);
+
+                } else if (msg is PlayMessage)
+                {
+
+                }
+                //}
                 
-                foreach (var item in tmpRemove)
-                {
-                    _nwc._commandList.Remove(item);
-                }
+                //foreach (var item in tmpRemove)
+                //{
+                //    _nwc._commandList.Remove(item);
+                //}
 
             } while (true);
         }

@@ -17,6 +17,7 @@ namespace SnakeBattle2
     {
         SnakeBattle2 _windowRef;
         Thread listenForMsg;
+        //MessageQueue cmsgQ;
         public ChatWindow(SnakeBattle2 winRef)
         {
             _windowRef = winRef;
@@ -30,8 +31,9 @@ namespace SnakeBattle2
             textBoxWrite.MaxLength = 80;
             textBoxMainChat.ScrollBars = ScrollBars.Vertical;
             this.AcceptButton = buttonSend;
-            listenForMsg = new Thread(WaitForChatMessage);
-            listenForMsg.Start();
+            this.ActiveControl = textBoxWrite;
+            //listenForMsg = new Thread(WaitForChatMessage);
+            //listenForMsg.Start();
         }
 
         public void ChatWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -58,7 +60,7 @@ namespace SnakeBattle2
                 string timestamp = dt.ToString("HH:mm:ss");
                 string name = _windowRef._MPplayer.Name;
                 string msg = $"{timestamp} {name}: {textBoxWrite.Text}";
-                ChatMessage cm = new ChatMessage(_windowRef._MPplayer.Name, msg) { HostName = null };
+                ChatMessage cm = new ChatMessage(_windowRef._MPplayer.Name, msg);
                 try
                 {
                     Console.WriteLine($"Sending {MessageHandler.Serialize(cm)}");
@@ -69,7 +71,7 @@ namespace SnakeBattle2
                 {
                     Console.WriteLine(ex.Message);
                 }
-                textBoxMainChat.AppendText(msg + "\n");
+                //textBoxMainChat.AppendText(msg + "\n");
                 textBoxWrite.Clear();
             }
         }
@@ -79,32 +81,34 @@ namespace SnakeBattle2
             textBoxMainChat.AppendText(msg + "\n");
         }
 
-        private void WaitForChatMessage()
-        {
-            Console.WriteLine("Awaiting chat messages...");
-            do
-            {
-                Thread.Sleep(200);
-                List<ChatMessage> tmpRemove = new List<ChatMessage>();
-                foreach (var item in _windowRef._nwc._commandList)
-                {
-                    if (item is ChatMessage)
-                    {
-                        ChatMessage cm = item as ChatMessage;
-                        string print = cm.Message;
-                        if (cm.UserName != _windowRef._MPplayer.Name)
-                            receiveMessage(cm.Message);
-                        tmpRemove.Add(item as ChatMessage);
+        //private void WaitForChatMessage()
+        //{
+        //    Console.WriteLine("Awaiting chat messages...");
+        //    do
+        //    {
+        //        MessagesLibrary.Message msg = cmsgQ.ReadMessage();
 
-                    }
-                }
+        //        //Thread.Sleep(200);
+        //        //List<ChatMessage> tmpRemove = new List<ChatMessage>();
+        //        //foreach (var item in _windowRef._nwc._commandList)
+        //        //{
+        //            if (msg is ChatMessage)
+        //            {
+        //                ChatMessage cm = msg as ChatMessage;
+        //                string print = cm.Message;
+        //                //if (cm.UserName != _windowRef._MPplayer.Name)
+        //                receiveMessage(print);
+        //                //tmpRemove.Add(item as ChatMessage);
 
-                foreach (var item in tmpRemove)
-                {
-                    _windowRef._nwc._commandList.Remove(item);
-                }
+        //            }
+        //        //}
 
-            } while (true);
-        }
+        //        //foreach (var item in tmpRemove)
+        //        //{
+        //        //    _windowRef._nwc._commandList.Remove(item);
+        //        //}
+
+        //    } while (true);
+        //}
     }
 }

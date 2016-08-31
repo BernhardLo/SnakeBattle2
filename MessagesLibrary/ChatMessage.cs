@@ -12,7 +12,6 @@ namespace MessagesLibrary
         {
             this.Message = message;
         }
-        public string HostName { get; set; }
         public string Message { get; set; }
     }
 }
