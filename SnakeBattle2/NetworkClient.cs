@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SnakeBattle2
 {
-    class NetworkClient
+    public class NetworkClient
     {
         private TcpClient _serverClient;
         public List<Message> _commandList = new List<Message>();
@@ -45,7 +45,7 @@ namespace SnakeBattle2
         public void Listen()
         {
             string message = "";
-
+            Console.WriteLine("Initializing listener thread");
             try
             {
                 while (true)
@@ -91,6 +91,11 @@ namespace SnakeBattle2
             {
                 if (msg.UserName == _filterUserName)
                     _commandList.Add(msg);
+            }
+            else if (msg is ChatMessage)
+            {
+                Console.WriteLine("received chatmessage " +message);
+                _commandList.Add(msg);
             }
             else if (msg is ErrorMessage)
             {

@@ -22,7 +22,16 @@ namespace GameLogic
         {
             Name = name;
             Color = color;
+            SetHighlightColor(color);
+        }
 
+        public Player (string name)
+        {
+            Name = name;
+        }
+
+        private void SetHighlightColor (Color color)
+        {
             if (color == Color.Red)
                 HighlightColor = Color.LightSalmon;
             if (color == Color.Blue)
@@ -39,12 +48,6 @@ namespace GameLogic
                 HighlightColor = Color.SandyBrown;
             if (color == Color.Purple)
                 HighlightColor = Color.Plum;
-
-        }
-
-        public Player (string name)
-        {
-            // todo implement simple constructor
         }
     }
 }

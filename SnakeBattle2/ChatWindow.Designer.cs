@@ -37,6 +37,7 @@ namespace SnakeBattle2
             // 
             // textBoxMainChat
             // 
+            this.textBoxMainChat.Font = new System.Drawing.Font("Sitka Text", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxMainChat.Location = new System.Drawing.Point(13, 13);
             this.textBoxMainChat.Multiline = true;
             this.textBoxMainChat.Name = "textBoxMainChat";
@@ -45,6 +46,7 @@ namespace SnakeBattle2
             // 
             // textBoxWrite
             // 
+            this.textBoxWrite.Font = new System.Drawing.Font("Sitka Text", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxWrite.Location = new System.Drawing.Point(13, 515);
             this.textBoxWrite.Multiline = true;
             this.textBoxWrite.Name = "textBoxWrite";
@@ -53,7 +55,7 @@ namespace SnakeBattle2
             // 
             // buttonSend
             // 
-            this.buttonSend.Font = new System.Drawing.Font("Wingdings", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.buttonSend.Font = new System.Drawing.Font("Wingdings", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.buttonSend.Location = new System.Drawing.Point(345, 515);
             this.buttonSend.Name = "buttonSend";
             this.buttonSend.Size = new System.Drawing.Size(66, 58);
@@ -72,9 +74,9 @@ namespace SnakeBattle2
             this.Controls.Add(this.textBoxMainChat);
             this.Name = "ChatWindow";
             this.Text = "ChatWindow";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChatWindow_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.FormClosing += new FormClosingEventHandler(this.ChatWindow_FormClosing);
 
         }
 

@@ -88,11 +88,13 @@ namespace SnakeBattle2
             this.buttonMPleaveLobby = new System.Windows.Forms.Button();
             this.labelMPlobby = new System.Windows.Forms.Label();
             this.buttonMPrefresh = new System.Windows.Forms.Button();
+            this.buttonMPleaveServer = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonNewSP
             // 
+            this.buttonNewSP.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonNewSP.Font = new System.Drawing.Font("Sitka Text", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonNewSP.ForeColor = System.Drawing.SystemColors.ControlText;
             this.buttonNewSP.Location = new System.Drawing.Point(378, 307);
@@ -100,11 +102,12 @@ namespace SnakeBattle2
             this.buttonNewSP.Size = new System.Drawing.Size(154, 72);
             this.buttonNewSP.TabIndex = 0;
             this.buttonNewSP.Text = "Single Player";
-            this.buttonNewSP.UseVisualStyleBackColor = true;
+            this.buttonNewSP.UseVisualStyleBackColor = false;
             this.buttonNewSP.Click += new System.EventHandler(this.buttonNewSP_Click);
             // 
             // buttonNewMP
             // 
+            this.buttonNewMP.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonNewMP.Font = new System.Drawing.Font("Sitka Text", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonNewMP.ForeColor = System.Drawing.SystemColors.ControlText;
             this.buttonNewMP.Location = new System.Drawing.Point(378, 385);
@@ -112,12 +115,12 @@ namespace SnakeBattle2
             this.buttonNewMP.Size = new System.Drawing.Size(154, 72);
             this.buttonNewMP.TabIndex = 1;
             this.buttonNewMP.Text = "Multi Player";
-            this.buttonNewMP.UseVisualStyleBackColor = true;
+            this.buttonNewMP.UseVisualStyleBackColor = false;
             this.buttonNewMP.Click += new System.EventHandler(this.buttonNewMP_Click);
             // 
             // comboBoxPlayers
             // 
-            this.comboBoxPlayers.BackColor = System.Drawing.Color.White;
+            this.comboBoxPlayers.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.comboBoxPlayers.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPlayers.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxPlayers.ForeColor = System.Drawing.SystemColors.WindowText;
@@ -140,6 +143,7 @@ namespace SnakeBattle2
             // 
             // comboBoxFieldSize
             // 
+            this.comboBoxFieldSize.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.comboBoxFieldSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFieldSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxFieldSize.FormattingEnabled = true;
@@ -161,6 +165,7 @@ namespace SnakeBattle2
             // 
             // buttonStartGame
             // 
+            this.buttonStartGame.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonStartGame.Font = new System.Drawing.Font("Sitka Text", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStartGame.ForeColor = System.Drawing.SystemColors.ControlText;
             this.buttonStartGame.Location = new System.Drawing.Point(295, 432);
@@ -168,7 +173,7 @@ namespace SnakeBattle2
             this.buttonStartGame.Size = new System.Drawing.Size(251, 45);
             this.buttonStartGame.TabIndex = 6;
             this.buttonStartGame.Text = "Start Game";
-            this.buttonStartGame.UseVisualStyleBackColor = true;
+            this.buttonStartGame.UseVisualStyleBackColor = false;
             this.buttonStartGame.Click += new System.EventHandler(this.buttonStartGame_Click);
             // 
             // labelXY
@@ -208,6 +213,7 @@ namespace SnakeBattle2
             // 
             // buttonQuitGame
             // 
+            this.buttonQuitGame.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonQuitGame.Font = new System.Drawing.Font("Sitka Text", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonQuitGame.ForeColor = System.Drawing.SystemColors.ControlText;
             this.buttonQuitGame.Location = new System.Drawing.Point(753, 815);
@@ -215,7 +221,7 @@ namespace SnakeBattle2
             this.buttonQuitGame.Size = new System.Drawing.Size(126, 36);
             this.buttonQuitGame.TabIndex = 13;
             this.buttonQuitGame.Text = "Quit Game";
-            this.buttonQuitGame.UseVisualStyleBackColor = true;
+            this.buttonQuitGame.UseVisualStyleBackColor = false;
             this.buttonQuitGame.Click += new System.EventHandler(this.buttonQuitGame_Click);
             // 
             // buttonOpponent0
@@ -464,6 +470,7 @@ namespace SnakeBattle2
             // 
             // buttonConnect
             // 
+            this.buttonConnect.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonConnect.Font = new System.Drawing.Font("Webdings", 12F);
             this.buttonConnect.ForeColor = System.Drawing.Color.Red;
             this.buttonConnect.Location = new System.Drawing.Point(517, 100);
@@ -471,7 +478,7 @@ namespace SnakeBattle2
             this.buttonConnect.Size = new System.Drawing.Size(29, 23);
             this.buttonConnect.TabIndex = 35;
             this.buttonConnect.Text = "~";
-            this.buttonConnect.UseVisualStyleBackColor = true;
+            this.buttonConnect.UseVisualStyleBackColor = false;
             this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
             // 
             // textBoxUserName
@@ -493,6 +500,7 @@ namespace SnakeBattle2
             // 
             // buttonUserName
             // 
+            this.buttonUserName.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonUserName.Font = new System.Drawing.Font("Webdings", 8F);
             this.buttonUserName.ForeColor = System.Drawing.Color.Red;
             this.buttonUserName.Location = new System.Drawing.Point(517, 129);
@@ -500,11 +508,12 @@ namespace SnakeBattle2
             this.buttonUserName.Size = new System.Drawing.Size(29, 23);
             this.buttonUserName.TabIndex = 38;
             this.buttonUserName.Text = "n";
-            this.buttonUserName.UseVisualStyleBackColor = true;
+            this.buttonUserName.UseVisualStyleBackColor = false;
             this.buttonUserName.Click += new System.EventHandler(this.buttonUserName_Click);
             // 
             // buttonEnterServer
             // 
+            this.buttonEnterServer.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonEnterServer.Font = new System.Drawing.Font("Sitka Text", 12F);
             this.buttonEnterServer.ForeColor = System.Drawing.Color.Green;
             this.buttonEnterServer.Location = new System.Drawing.Point(378, 187);
@@ -512,7 +521,7 @@ namespace SnakeBattle2
             this.buttonEnterServer.Size = new System.Drawing.Size(116, 41);
             this.buttonEnterServer.TabIndex = 39;
             this.buttonEnterServer.Text = "Enter Server";
-            this.buttonEnterServer.UseVisualStyleBackColor = true;
+            this.buttonEnterServer.UseVisualStyleBackColor = false;
             this.buttonEnterServer.Click += new System.EventHandler(this.buttonEnterServer_Click);
             // 
             // labelConnectMessage
@@ -537,6 +546,7 @@ namespace SnakeBattle2
             // 
             // buttonConnectCancel
             // 
+            this.buttonConnectCancel.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonConnectCancel.Font = new System.Drawing.Font("Webdings", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.buttonConnectCancel.ForeColor = System.Drawing.Color.Red;
             this.buttonConnectCancel.Location = new System.Drawing.Point(505, 187);
@@ -544,11 +554,12 @@ namespace SnakeBattle2
             this.buttonConnectCancel.Size = new System.Drawing.Size(50, 41);
             this.buttonConnectCancel.TabIndex = 42;
             this.buttonConnectCancel.Text = "r";
-            this.buttonConnectCancel.UseVisualStyleBackColor = true;
+            this.buttonConnectCancel.UseVisualStyleBackColor = false;
             this.buttonConnectCancel.Click += new System.EventHandler(this.buttonConnectCancel_Click);
             // 
             // buttonStartGameCancel
             // 
+            this.buttonStartGameCancel.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonStartGameCancel.Font = new System.Drawing.Font("Webdings", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.buttonStartGameCancel.ForeColor = System.Drawing.Color.Red;
             this.buttonStartGameCancel.Location = new System.Drawing.Point(552, 432);
@@ -556,7 +567,7 @@ namespace SnakeBattle2
             this.buttonStartGameCancel.Size = new System.Drawing.Size(50, 45);
             this.buttonStartGameCancel.TabIndex = 43;
             this.buttonStartGameCancel.Text = "r";
-            this.buttonStartGameCancel.UseVisualStyleBackColor = true;
+            this.buttonStartGameCancel.UseVisualStyleBackColor = false;
             this.buttonStartGameCancel.Click += new System.EventHandler(this.buttonStartGameCancel_Click);
             // 
             // listBoxMPavailableGames
@@ -579,17 +590,20 @@ namespace SnakeBattle2
             // 
             // buttonMPjoinGame
             // 
+            this.buttonMPjoinGame.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.buttonMPjoinGame.Font = new System.Drawing.Font("Sitka Text", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonMPjoinGame.ForeColor = System.Drawing.SystemColors.ControlText;
             this.buttonMPjoinGame.Location = new System.Drawing.Point(47, 573);
             this.buttonMPjoinGame.Name = "buttonMPjoinGame";
             this.buttonMPjoinGame.Size = new System.Drawing.Size(109, 36);
             this.buttonMPjoinGame.TabIndex = 46;
-            this.buttonMPjoinGame.Text = "Join Game";
-            this.buttonMPjoinGame.UseVisualStyleBackColor = true;
+            this.buttonMPjoinGame.Text = "Join";
+            this.buttonMPjoinGame.UseVisualStyleBackColor = false;
             this.buttonMPjoinGame.Click += new System.EventHandler(this.buttonMPjoinGame_Click);
             // 
             // buttonMPshowChat
             // 
+            this.buttonMPshowChat.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonMPshowChat.Font = new System.Drawing.Font("Webdings", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.buttonMPshowChat.ForeColor = System.Drawing.Color.Green;
             this.buttonMPshowChat.Location = new System.Drawing.Point(817, 37);
@@ -597,18 +611,20 @@ namespace SnakeBattle2
             this.buttonMPshowChat.Size = new System.Drawing.Size(69, 61);
             this.buttonMPshowChat.TabIndex = 47;
             this.buttonMPshowChat.Text = "_";
-            this.buttonMPshowChat.UseVisualStyleBackColor = true;
+            this.buttonMPshowChat.UseVisualStyleBackColor = false;
             this.buttonMPshowChat.Click += new System.EventHandler(this.buttonMPshowChat_Click);
             // 
             // buttonMPcreateGame
             // 
+            this.buttonMPcreateGame.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.buttonMPcreateGame.Font = new System.Drawing.Font("Sitka Text", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonMPcreateGame.ForeColor = System.Drawing.SystemColors.ControlText;
             this.buttonMPcreateGame.Location = new System.Drawing.Point(215, 573);
             this.buttonMPcreateGame.Name = "buttonMPcreateGame";
             this.buttonMPcreateGame.Size = new System.Drawing.Size(109, 36);
             this.buttonMPcreateGame.TabIndex = 48;
             this.buttonMPcreateGame.Text = "Create Game";
-            this.buttonMPcreateGame.UseVisualStyleBackColor = true;
+            this.buttonMPcreateGame.UseVisualStyleBackColor = false;
             this.buttonMPcreateGame.Click += new System.EventHandler(this.buttonMPcreateGame_Click);
             // 
             // labelMPfieldSize
@@ -624,6 +640,7 @@ namespace SnakeBattle2
             // 
             // comboBoxMPfieldSize
             // 
+            this.comboBoxMPfieldSize.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.comboBoxMPfieldSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMPfieldSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxMPfieldSize.FormattingEnabled = true;
@@ -643,24 +660,28 @@ namespace SnakeBattle2
             // 
             // buttonMPstartGame
             // 
+            this.buttonMPstartGame.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.buttonMPstartGame.Font = new System.Drawing.Font("Sitka Text", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonMPstartGame.ForeColor = System.Drawing.SystemColors.ControlText;
             this.buttonMPstartGame.Location = new System.Drawing.Point(578, 432);
             this.buttonMPstartGame.Name = "buttonMPstartGame";
             this.buttonMPstartGame.Size = new System.Drawing.Size(142, 36);
             this.buttonMPstartGame.TabIndex = 52;
             this.buttonMPstartGame.Text = "Start Game";
-            this.buttonMPstartGame.UseVisualStyleBackColor = true;
+            this.buttonMPstartGame.UseVisualStyleBackColor = false;
             this.buttonMPstartGame.Click += new System.EventHandler(this.buttonMPstartGame_Click);
             // 
             // buttonMPleaveLobby
             // 
+            this.buttonMPleaveLobby.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.buttonMPleaveLobby.Font = new System.Drawing.Font("Sitka Text", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonMPleaveLobby.ForeColor = System.Drawing.SystemColors.ControlText;
             this.buttonMPleaveLobby.Location = new System.Drawing.Point(737, 432);
             this.buttonMPleaveLobby.Name = "buttonMPleaveLobby";
             this.buttonMPleaveLobby.Size = new System.Drawing.Size(142, 36);
             this.buttonMPleaveLobby.TabIndex = 53;
             this.buttonMPleaveLobby.Text = "Leave Lobby";
-            this.buttonMPleaveLobby.UseVisualStyleBackColor = true;
+            this.buttonMPleaveLobby.UseVisualStyleBackColor = false;
             this.buttonMPleaveLobby.Click += new System.EventHandler(this.buttonMPleaveLobby_Click);
             // 
             // labelMPlobby
@@ -674,6 +695,7 @@ namespace SnakeBattle2
             // 
             // buttonMPrefresh
             // 
+            this.buttonMPrefresh.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonMPrefresh.Font = new System.Drawing.Font("Webdings", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.buttonMPrefresh.ForeColor = System.Drawing.Color.Green;
             this.buttonMPrefresh.Location = new System.Drawing.Point(295, 52);
@@ -681,13 +703,26 @@ namespace SnakeBattle2
             this.buttonMPrefresh.Size = new System.Drawing.Size(29, 29);
             this.buttonMPrefresh.TabIndex = 55;
             this.buttonMPrefresh.Text = "q";
-            this.buttonMPrefresh.UseVisualStyleBackColor = true;
+            this.buttonMPrefresh.UseVisualStyleBackColor = false;
+            // 
+            // buttonMPleaveServer
+            // 
+            this.buttonMPleaveServer.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.buttonMPleaveServer.Font = new System.Drawing.Font("Sitka Text", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonMPleaveServer.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.buttonMPleaveServer.Location = new System.Drawing.Point(726, 770);
+            this.buttonMPleaveServer.Name = "buttonMPleaveServer";
+            this.buttonMPleaveServer.Size = new System.Drawing.Size(153, 36);
+            this.buttonMPleaveServer.TabIndex = 56;
+            this.buttonMPleaveServer.Text = "Leave Server";
+            this.buttonMPleaveServer.UseVisualStyleBackColor = false;
             // 
             // SnakeBattle2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(893, 866);
+            this.Controls.Add(this.buttonMPleaveServer);
             this.Controls.Add(this.buttonMPrefresh);
             this.Controls.Add(this.labelMPlobby);
             this.Controls.Add(this.buttonMPleaveLobby);
@@ -819,6 +854,7 @@ namespace SnakeBattle2
         private System.Windows.Forms.Button buttonMPleaveLobby;
         private System.Windows.Forms.Label labelMPlobby;
         private System.Windows.Forms.Button buttonMPrefresh;
+        private System.Windows.Forms.Button buttonMPleaveServer;
     }
 }
 

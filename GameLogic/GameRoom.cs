@@ -8,10 +8,7 @@ namespace GameLogic
 {
     public class GameRoom
     {
-        public int NumberOfPlayers { get; set; }
         public List<Player> PlayerList { get; set; }
-        public string StartingPlayer { get; set; }
-        public int GameMode { get; set; }
         public string HostName { get; set; }
         public GameRoom()
         {

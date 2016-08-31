@@ -24,6 +24,10 @@ namespace MessagesLibrary
                 command = "fg";
             else if (obj is StartGameMessage)
                 command = "sg";
+            else if (obj is NewLobbyMessage)
+                command = "nl";
+            else if (obj is ChatMessage)
+                command = "cm";
             else
                 command = "er";
 
@@ -50,6 +54,10 @@ namespace MessagesLibrary
                 result = JsonConvert.DeserializeObject<FindGameMessage>(message);
             else if (commandType == "sg")
                 result = JsonConvert.DeserializeObject<StartGameMessage>(message);
+            else if (commandType == "nl")
+                result = JsonConvert.DeserializeObject<NewLobbyMessage>(message);
+            else if (commandType == "cm")
+                result = JsonConvert.DeserializeObject<ChatMessage>(message);
             else
                 result = new ErrorMessage("Error") { EMessage = "Something went terribly wrong" };
 

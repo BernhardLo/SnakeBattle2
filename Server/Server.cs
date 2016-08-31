@@ -91,7 +91,7 @@ namespace SnakeBattle2Server
                 Console.WriteLine(item.Name);
 
             result.NextUser = gr.PlayerList[j].Name;
-            gr.StartingPlayer = result.NextUser;
+            //gr.StartingPlayer = result.NextUser; //todo generate starting player
 
             if (gr.PlayerList.Count == 1)
             {

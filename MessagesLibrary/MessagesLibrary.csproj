@@ -50,12 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChatMessage.cs" />
     <Compile Include="ErrorMessage.cs" />
     <Compile Include="FindGameMessage.cs" />
     <Compile Include="JoinGameMessage.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageHandler.cs" />
     <Compile Include="NewGameMessage.cs" />
+    <Compile Include="NewLobbyMessage.cs" />
     <Compile Include="PlayMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartGameMessage.cs" />

@@ -52,10 +52,22 @@ namespace SnakeBattle2Server
                     else if (msg is NewGameMessage)
                     {
                         NewGameMessage tmp = msg as NewGameMessage;
-                        GameRoom room = new GameRoom() { HostName = tmp.UserName, GameMode = tmp.GameMode, NumberOfPlayers = tmp.NumberPlayers };
+                        GameRoom room = new GameRoom() { HostName = tmp.UserName };
                         Player tmpPlayer = new Player(tmp.UserName);
                         room.PlayerList.Add(tmpPlayer);
                         myServer._games.Add(room);
+                    }
+                    else if (msg is NewLobbyMessage)
+                    {
+                        NewLobbyMessage tmp = msg as NewLobbyMessage;
+                        if (tmp.Create) //todo create lobby
+                        {
+                            GameRoom room = new GameRoom() { HostName = tmp.UserName };
+                            Player tmpPlayer = new Player(tmp.UserName);
+                        } else //todo remove lobby
+                        {
+
+                        }
                     }
                     else if (msg is FindGameMessage)
                     {
@@ -67,6 +79,10 @@ namespace SnakeBattle2Server
                         myServer.PrivateSend(tcpclient, MessageHandler.Serialize(tmp));
 
                     }
+                    else if (msg is ChatMessage)
+                    {
+                        myServer.Broadcast(MessageHandler.Serialize(msg));
+                    }
                     else if (msg is JoinGameMessage)
                     {
                         JoinGameMessage tmp = msg as JoinGameMessage;
@@ -74,14 +90,14 @@ namespace SnakeBattle2Server
                         foreach (var item in myServer._games)
                         {
                             if (tmp.HostName == item.HostName)
-                                if (item.PlayerList.Count == item.NumberOfPlayers - 1)
+                                if (true/*item.PlayerList.Count == item.NumberOfPlayers - 1*/) //todo check for full game
                                 {
                                     Player tmpPlayer = new Player(tmp.UserName);
                                     item.PlayerList.Add(tmpPlayer);
                                     tmp.Confirmed = true;
                                     gameOn = true;
                                 }
-                                else if (item.PlayerList.Count < item.NumberOfPlayers)
+                                else if (true/*item.PlayerList.Count < item.NumberOfPlayers*/) //todo
                                 {
                                     Player tmpPlayer = new Player(tmp.UserName);
                                     item.PlayerList.Add(tmpPlayer);
