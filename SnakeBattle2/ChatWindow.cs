@@ -20,13 +20,13 @@ namespace SnakeBattle2
         //MessageQueue cmsgQ;
         public ChatWindow(SnakeBattle2 winRef)
         {
+            InitializeComponent();
             _windowRef = winRef;
             int top = _windowRef.Top;
             int right = _windowRef.Right;
             this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point(right, top);
             this.BackColor = Color.Black;
-            InitializeComponent();
             textBoxMainChat.ReadOnly = true;
             textBoxWrite.MaxLength = 80;
             textBoxMainChat.ScrollBars = ScrollBars.Vertical;

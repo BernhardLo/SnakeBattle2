@@ -71,22 +71,26 @@ namespace SnakeBattle2
             var msg = MessageHandler.Deserialize(message);
             if (msg is UserNameMessage)
             {
+                Console.WriteLine("received user name message");
                 _commandList.Add(msg);
             }
             else if (msg is FindGameMessage)
             {
+                Console.WriteLine("received find game message");
                 _commandList.Add(msg);
 
             }
             else if (msg is StartGameMessage)
             {
-                Thread.Sleep(500);
+                Console.WriteLine("received start game message");
+                //Thread.Sleep(500);
                 if (msg.UserName == _filterHostName)
                     _commandList.Add(msg);
 
             }
             else if (msg is PlayMessage)
             {
+                Console.WriteLine("received play message");
                 PlayMessage tmp = msg as PlayMessage;
                 if (tmp.HostName == _filterHostName)
                     _commandList.Add(msg);
@@ -124,10 +128,10 @@ namespace SnakeBattle2
             try
             {
                 NetworkStream nws = _serverClient.GetStream();
-
                 BinaryWriter bnw = new BinaryWriter(nws);
                 bnw.Write(message);
                 bnw.Flush();
+                Console.WriteLine("successfully sent: "+message);
 
                 if (message.Equals("quit"))
                     _serverClient.Close();

@@ -23,7 +23,7 @@ namespace SnakeBattle2Server
             this.UserName = "<empty>";
         }
 
-        public void Run()
+        public void Run() //server receives messages
         {
             try
             {
@@ -80,6 +80,7 @@ namespace SnakeBattle2Server
                                         myServer.Broadcast(MessageHandler.Serialize(km));
                                         //todo send kickmessage to all users
                                     }
+                                    item.PlayerList.Clear();
                                 }
                             }
                             myServer._games.RemoveAll(x => x.HostName == tmp.UserName);
@@ -92,7 +93,7 @@ namespace SnakeBattle2Server
                     else if (msg is KickMessage)
                     {
                         KickMessage tmp = msg as KickMessage;
-                        Player tmpP = null;
+                        Player tmpP = new Player("<empty>");
 
                         foreach (var item in myServer._games)
                         {
@@ -103,7 +104,7 @@ namespace SnakeBattle2Server
                                     tmpP = player;
                                 }
                             }
-                            if (tmpP != null)
+                            if (tmpP.Name != "<empty>")
                             {
                                 item.PlayerList.Remove(tmpP);
                                 KickMessage km = new KickMessage(tmpP.Name);
@@ -128,26 +129,29 @@ namespace SnakeBattle2Server
                     else if (msg is JoinGameMessage)
                     {
                         JoinGameMessage tmp = msg as JoinGameMessage;
-                        //bool gameOn = false;
+
                         foreach (var item in myServer._games)
                         {
                             if (tmp.HostName == item.HostName && item.PlayerList.Count < 8 && !item.hasStarted)
                             {
+                                foreach (Player p in item.PlayerList) //broadcast update to all players
+                                {
+                                    JoinGameMessage jj = new JoinGameMessage(p.Name) { HostName = item.HostName, PlayerListLobby = item.PlayerList, Confirmed = true };
+                                    myServer.Broadcast(MessageHandler.Serialize(jj));
+                                }
                                 Player tmpPlayer = new Player(tmp.UserName);
                                 item.PlayerList.Add(tmpPlayer);
+                                tmp.PlayerListLobby = item.PlayerList;
                                 tmp.Confirmed = true;
-                                //gameOn = true;
-                            } else
+                            }
+                            else
                             {
                                 tmp.Confirmed = false;
                             }
                         }
 
                         myServer.PrivateSend(tcpclient, MessageHandler.Serialize(tmp));
-                        //if (gameOn)
-                        //{
-                        //    myServer.SendStartGameMessage(tmp.HostName);
-                        //}
+
                     }
                     else if (msg is ErrorMessage)
                     {

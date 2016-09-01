@@ -38,7 +38,6 @@ namespace SnakeBattle2
             this.comboBoxFieldSize = new System.Windows.Forms.ComboBox();
             this.labelFieldSize = new System.Windows.Forms.Label();
             this.buttonStartGame = new System.Windows.Forms.Button();
-            this.labelXY = new System.Windows.Forms.Label();
             this.comboBoxMyColor = new System.Windows.Forms.ComboBox();
             this.labelMyColor = new System.Windows.Forms.Label();
             this.buttonQuitGame = new System.Windows.Forms.Button();
@@ -61,7 +60,6 @@ namespace SnakeBattle2
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showCoordinatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelOpponent7 = new System.Windows.Forms.Label();
             this.buttonOpponent7 = new System.Windows.Forms.Button();
@@ -175,17 +173,6 @@ namespace SnakeBattle2
             this.buttonStartGame.Text = "Start Game";
             this.buttonStartGame.UseVisualStyleBackColor = false;
             this.buttonStartGame.Click += new System.EventHandler(this.buttonStartGame_Click);
-            // 
-            // labelXY
-            // 
-            this.labelXY.AutoSize = true;
-            this.labelXY.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelXY.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.labelXY.Location = new System.Drawing.Point(835, 37);
-            this.labelXY.Name = "labelXY";
-            this.labelXY.Size = new System.Drawing.Size(35, 13);
-            this.labelXY.TabIndex = 7;
-            this.labelXY.Text = "label1";
             // 
             // comboBoxMyColor
             // 
@@ -403,7 +390,6 @@ namespace SnakeBattle2
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showConsoleToolStripMenuItem,
-            this.showCoordinatesToolStripMenuItem,
             this.runServerToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
@@ -412,21 +398,14 @@ namespace SnakeBattle2
             // showConsoleToolStripMenuItem
             // 
             this.showConsoleToolStripMenuItem.Name = "showConsoleToolStripMenuItem";
-            this.showConsoleToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.showConsoleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.showConsoleToolStripMenuItem.Text = "Show Console";
             this.showConsoleToolStripMenuItem.Click += new System.EventHandler(this.showConsoleToolStripMenuItem_Click);
-            // 
-            // showCoordinatesToolStripMenuItem
-            // 
-            this.showCoordinatesToolStripMenuItem.Name = "showCoordinatesToolStripMenuItem";
-            this.showCoordinatesToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.showCoordinatesToolStripMenuItem.Text = "Show Coordinates";
-            this.showCoordinatesToolStripMenuItem.Click += new System.EventHandler(this.showCoordinatesToolStripMenuItem_Click);
             // 
             // runServerToolStripMenuItem
             // 
             this.runServerToolStripMenuItem.Name = "runServerToolStripMenuItem";
-            this.runServerToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.runServerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.runServerToolStripMenuItem.Text = "Run Server";
             this.runServerToolStripMenuItem.Click += new System.EventHandler(this.runServerToolStripMenuItem_Click);
             // 
@@ -528,7 +507,7 @@ namespace SnakeBattle2
             // 
             this.labelConnectMessage.AutoSize = true;
             this.labelConnectMessage.Font = new System.Drawing.Font("Sitka Text", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelConnectMessage.Location = new System.Drawing.Point(553, 109);
+            this.labelConnectMessage.Location = new System.Drawing.Point(553, 102);
             this.labelConnectMessage.Name = "labelConnectMessage";
             this.labelConnectMessage.Size = new System.Drawing.Size(41, 18);
             this.labelConnectMessage.TabIndex = 40;
@@ -538,7 +517,7 @@ namespace SnakeBattle2
             // 
             this.labelUserNameMessage.AutoSize = true;
             this.labelUserNameMessage.Font = new System.Drawing.Font("Sitka Text", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelUserNameMessage.Location = new System.Drawing.Point(553, 136);
+            this.labelUserNameMessage.Location = new System.Drawing.Point(553, 129);
             this.labelUserNameMessage.Name = "labelUserNameMessage";
             this.labelUserNameMessage.Size = new System.Drawing.Size(41, 18);
             this.labelUserNameMessage.TabIndex = 41;
@@ -606,7 +585,7 @@ namespace SnakeBattle2
             this.buttonMPshowChat.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonMPshowChat.Font = new System.Drawing.Font("Webdings", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.buttonMPshowChat.ForeColor = System.Drawing.Color.Green;
-            this.buttonMPshowChat.Location = new System.Drawing.Point(817, 37);
+            this.buttonMPshowChat.Location = new System.Drawing.Point(817, 33);
             this.buttonMPshowChat.Name = "buttonMPshowChat";
             this.buttonMPshowChat.Size = new System.Drawing.Size(69, 61);
             this.buttonMPshowChat.TabIndex = 47;
@@ -769,7 +748,6 @@ namespace SnakeBattle2
             this.Controls.Add(this.buttonQuitGame);
             this.Controls.Add(this.labelMyColor);
             this.Controls.Add(this.comboBoxMyColor);
-            this.Controls.Add(this.labelXY);
             this.Controls.Add(this.buttonStartGame);
             this.Controls.Add(this.labelFieldSize);
             this.Controls.Add(this.comboBoxFieldSize);
@@ -787,7 +765,6 @@ namespace SnakeBattle2
             this.Load += new System.EventHandler(this.SnakeBattle2_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form_Paint);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form_MouseClick);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form_MouseMove);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -806,7 +783,6 @@ namespace SnakeBattle2
         private System.Windows.Forms.ComboBox comboBoxFieldSize;
         private System.Windows.Forms.Label labelFieldSize;
         private System.Windows.Forms.Button buttonStartGame;
-        private System.Windows.Forms.Label labelXY;
         private System.Windows.Forms.ComboBox comboBoxMyColor;
         private System.Windows.Forms.Label labelMyColor;
         private System.Windows.Forms.Button buttonQuitGame;
@@ -829,7 +805,6 @@ namespace SnakeBattle2
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showConsoleToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showCoordinatesToolStripMenuItem;
         private System.Windows.Forms.Label labelOpponent7;
         private System.Windows.Forms.Button buttonOpponent7;
         private System.Windows.Forms.TextBox textBoxConnect;

@@ -59,9 +59,6 @@
     <Compile Include="SPGame.cs" />
     <Compile Include="GraphicsEngine.cs" />
     <Compile Include="MPGame.cs" />
-    <Compile Include="MyComboBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="NetworkClient.cs" />
     <Compile Include="SnakeBattle2.cs">
       <SubType>Form</SubType>

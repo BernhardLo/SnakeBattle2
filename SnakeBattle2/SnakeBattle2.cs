@@ -16,6 +16,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using MessagesLibrary;
 using System.Diagnostics;
+using System.Security.Permissions;
 
 namespace SnakeBattle2
 {
@@ -45,25 +46,31 @@ namespace SnakeBattle2
 
         public SnakeBattle2()
         {
+            InitializeComponent();
+
             this.BackColor = Color.Black;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.DoubleBuffered = true;
-            InitializeComponent();
+            //this.DoubleBuffered = true;
             msgQ = new MessageQueue();
             CheckForIllegalCrossThreadCalls = false;
             _nwc = new NetworkClient(this, msgQ);
+
             GoToMainMenu();
+
             availableColors = new Color[8] { Color.Red, Color.Blue, Color.Yellow, Color.Green, Color.Gray, Color.HotPink, Color.DarkOrange, Color.Purple };
             for (int i = 2; i <= 8; i++)
                 comboBoxPlayers.Items.Add(i);
+
             for (int i = 8; i <= 15; i++)
             {
                 comboBoxFieldSize.Items.Add(i);
                 comboBoxMPfieldSize.Items.Add(i);
             }
+
             foreach (var item in availableColors)
                 comboBoxMyColor.Items.Add(item.Name);
+
 
 
             buttonWin.Location = new System.Drawing.Point(0, 280);
@@ -74,9 +81,11 @@ namespace SnakeBattle2
             buttonOpponent4.UseVisualStyleBackColor = false;
             buttonOpponent5.UseVisualStyleBackColor = false;
             buttonOpponent6.UseVisualStyleBackColor = false;
-            labelXY.Text = " ";
-            labelXY.Hide();
+            buttonOpponent7.UseVisualStyleBackColor = false;
+            //labelXY.Text = " ";
+            //labelXY.Hide();
             Console.WriteLine("Welcome to Snake Battle 2");
+            Console.WriteLine("UIThread : " + Thread.CurrentThread.ManagedThreadId);
 
         }
 
@@ -94,7 +103,8 @@ namespace SnakeBattle2
             }
         }
 
-        public void GoToMainMenu ()
+        #region Button handling
+        public void GoToMainMenu()
         {
             buttonWin.Hide();
             buttonNewSP.Show();
@@ -144,13 +154,17 @@ namespace SnakeBattle2
             labelMPavailableGames.Hide();
             listBoxMPavailableGames.Hide();
             buttonMPjoinGame.Hide();
+            buttonMPjoinGame.Enabled = true;
             buttonMPcreateGame.Hide();
+            buttonMPcreateGame.Enabled = true;
             buttonMPrefresh.Hide();
             buttonMPleaveServer.Hide();
             labelMPlobby.Hide();
             listBoxMPplayerLobby.Hide();
             buttonMPstartGame.Hide();
+            buttonMPstartGame.Enabled = false;
             buttonMPleaveLobby.Hide();
+            buttonMPleaveLobby.Enabled = false;
             buttonMPshowChat.Hide();
             labelMPfieldSize.Hide();
             comboBoxMPfieldSize.Hide();
@@ -221,7 +235,7 @@ namespace SnakeBattle2
 
         public void GoToGame()
         {
-            Player player = new Player ( "Player 1", Color.FromName(comboBoxMyColor.SelectedItem.ToString()) );
+            Player player = new Player("Player 1", Color.FromName(comboBoxMyColor.SelectedItem.ToString()));
             int numberOfPlayers = Convert.ToInt32(comboBoxPlayers.Text);
             Color playerColor = Color.FromName(comboBoxMyColor.SelectedItem.ToString());
             buttonWin.Hide();
@@ -340,14 +354,15 @@ namespace SnakeBattle2
             buttonMPleaveServer.Show();
         }
 
-        public void GoToLobby (bool host)
+        public void GoToLobby(bool host)
         {
             buttonMPjoinGame.Hide();
             buttonMPcreateGame.Hide();
             buttonMPleaveLobby.Show();
+            buttonMPleaveLobby.Enabled = true;
             labelMPlobby.Show();
             listBoxMPplayerLobby.Show();
-            buttonMPleaveLobby.Show();
+
             if (host)
             {
                 buttonMPstartGame.Show();
@@ -359,7 +374,7 @@ namespace SnakeBattle2
             }
         }
 
-        public void GoToFindGame ()
+        public void GoToFindGame()
         {
             listBoxMPplayerLobby.Items.Clear();
             labelMPlobby.Hide();
@@ -376,19 +391,14 @@ namespace SnakeBattle2
             buttonMPcreateGame.Show();
         }
 
-        private void DisableRefreshButton ()
+        private void DisableRefreshButton()
         {
             buttonMPrefresh.Enabled = false;
             Thread.Sleep(1400);
             buttonMPrefresh.Enabled = true;
         }
 
-        private void buttonNewSP_Click(object sender, EventArgs e)
-        {
-            GoToGameOptions();
-        }
-
-        public void ShowOpponentIconsAndLabels (List<Opponent> opponents)
+        public void ShowOpponentIconsAndLabels(List<Opponent> opponents)
         {
             Opponent[] ops = opponents.ToArray();
             if (opponents.Count >= 1)
@@ -398,42 +408,48 @@ namespace SnakeBattle2
                 buttonOpponent0.Text = " ";
                 buttonOpponent0.Show();
                 labelOpponent0.Show();
-            } if (opponents.Count >= 2)
+            }
+            if (opponents.Count >= 2)
             {
                 buttonOpponent1.BackColor = ops[1].Color;
                 labelOpponent1.Text = ops[1].Name;
                 buttonOpponent1.Text = " ";
                 buttonOpponent1.Show();
                 labelOpponent1.Show();
-            } if (opponents.Count >= 3)
+            }
+            if (opponents.Count >= 3)
             {
                 buttonOpponent2.BackColor = ops[2].Color;
                 labelOpponent2.Text = ops[2].Name;
                 buttonOpponent2.Text = " ";
                 buttonOpponent2.Show();
                 labelOpponent2.Show();
-            } if (opponents.Count >= 4)
+            }
+            if (opponents.Count >= 4)
             {
                 buttonOpponent3.BackColor = ops[3].Color;
                 labelOpponent3.Text = ops[3].Name;
                 buttonOpponent3.Text = " ";
                 buttonOpponent3.Show();
                 labelOpponent3.Show();
-            } if (opponents.Count >= 5)
+            }
+            if (opponents.Count >= 5)
             {
                 buttonOpponent4.BackColor = ops[4].Color;
                 labelOpponent4.Text = ops[4].Name;
                 buttonOpponent4.Text = " ";
                 buttonOpponent4.Show();
                 labelOpponent4.Show();
-            } if (opponents.Count >= 6)
+            }
+            if (opponents.Count >= 6)
             {
                 buttonOpponent5.BackColor = ops[5].Color;
                 labelOpponent5.Text = ops[5].Name;
                 buttonOpponent5.Text = " ";
                 buttonOpponent5.Show();
                 labelOpponent5.Show();
-            } if (opponents.Count >= 7)
+            }
+            if (opponents.Count >= 7)
             {
                 buttonOpponent6.BackColor = ops[6].Color;
                 labelOpponent6.Text = ops[6].Name;
@@ -443,6 +459,15 @@ namespace SnakeBattle2
             }
         }
 
+        #endregion
+
+
+        private void buttonNewSP_Click(object sender, EventArgs e)
+        {
+            GoToGameOptions();
+        }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, ControlThread = true)]
         public void KillThread()
         {
             if (listenForMsg != null)
@@ -452,7 +477,7 @@ namespace SnakeBattle2
             }
         }
 
-        public void OpponentLost (int i)
+        public void OpponentLost(int i)
         {
             if (i == 0)
                 buttonOpponent0.Text = "X";
@@ -482,10 +507,10 @@ namespace SnakeBattle2
             //else
         }
 
-        public void SetFieldAndHexSizes (string input)
+        public void SetFieldAndHexSizes(string input)
         {
             int i = Convert.ToInt32(input);
-            switch(i)
+            switch (i)
             {
                 case 8:
                     _hexSize = 49;
@@ -549,6 +574,7 @@ namespace SnakeBattle2
                 graphicsEngine.Draw(e.Graphics);
                 this.Invalidate();
             }
+            //Console.WriteLine("painting.." +DateTime.Now.ToString());
 
             //Force the next Paint()
             //this.Invalidate(); //gör att menyn blinkar
@@ -579,26 +605,26 @@ namespace SnakeBattle2
                 _currentGame.MouseClicked(sender, e, _xOffset, _yOffset);
         }
 
-        private void Form_MouseMove(object sender, MouseEventArgs e)
-        {
+        //private void Form_MouseMove(object sender, MouseEventArgs e)
+        //{
 
-            try
-            {
-                Point mouseClick = new Point(e.X - _xOffset, e.Y - _yOffset);
-                Hex clickedHex = _board.FindHexMouseClick(mouseClick);
-                labelXY.Text = $"X: {clickedHex.xCoord} Y: {clickedHex.yCoord}";
+        //    try
+        //    {
+        //        Point mouseClick = new Point(e.X - _xOffset, e.Y - _yOffset);
+        //        Hex clickedHex = _board.FindHexMouseClick(mouseClick);
+        //        labelXY.Text = $"X: {clickedHex.xCoord} Y: {clickedHex.yCoord}";
 
-            }
-            catch (Exception ex)
-            {
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-            }
-        }
+        //    }
+        //}
 
         private void SnakeBattle2_Load(object sender, EventArgs e)
         {
 
-        
+
         }
 
         private void buttonQuitGame_Click(object sender, EventArgs e)
@@ -631,25 +657,12 @@ namespace SnakeBattle2
             {
                 Program.HideConsole();
                 showConsoleToolStripMenuItem.Checked = false;
-            } else
+            }
+            else
             {
                 Program.ShowConsole();
                 showConsoleToolStripMenuItem.Checked = true;
             }
-        }
-
-        private void showCoordinatesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (showCoordinatesToolStripMenuItem.Checked)
-            {
-                labelXY.Hide();
-                showCoordinatesToolStripMenuItem.Checked = false;
-            } else
-            {
-                labelXY.Show();
-                showCoordinatesToolStripMenuItem.Checked = true;
-            }
-
         }
 
 
@@ -787,11 +800,13 @@ namespace SnakeBattle2
                     );
 
                     connectionThread.Start();
-                } else
+                }
+                else
                     labelConnectMessage.Text = "Not a valid IP address.";
-                
 
-            } else if (buttonConnect.ForeColor == Color.Green)
+
+            }
+            else if (buttonConnect.ForeColor == Color.Green)
             {
                 labelConnectMessage.Text = "Disconnected.";
                 _nwc.Send("quit");
@@ -823,12 +838,14 @@ namespace SnakeBattle2
                     {
                         labelUserNameMessage.Text = "User name sent.";
                     }
-                } else
+                }
+                else
                 {
                     buttonUserName.Enabled = true;
                 }
 
-            } else if (buttonUserName.ForeColor == Color.Green)
+            }
+            else if (buttonUserName.ForeColor == Color.Green)
             {
                 buttonUserName.ForeColor = Color.Red;
                 buttonEnterServer.Enabled = false;
@@ -882,7 +899,8 @@ namespace SnakeBattle2
                 cw = new ChatWindow(this);
                 cw.Show();
                 buttonMPshowChat.ForeColor = Color.Red;
-            } else if (buttonMPshowChat.ForeColor == Color.Red)
+            }
+            else if (buttonMPshowChat.ForeColor == Color.Red)
             {
                 cw.Hide();
                 buttonMPshowChat.ForeColor = Color.Green;
@@ -891,7 +909,21 @@ namespace SnakeBattle2
 
         private void buttonMPstartGame_Click(object sender, EventArgs e)
         {
+            //StartGameMessage sgm = new StartGameMessage(_MPplayer.Name));
+            //_nwc.Send(Snew StartGameMessage(_MPplayer.Name));
 
+            //Board board = new Board(Convert.ToInt32(comboBoxFieldSize.Text),
+            //Convert.ToInt32(comboBoxFieldSize.Text), _hexSize, HexOrientation.Pointy);
+
+            //board.BoardState.BackgroundColor = Color.Black; //background color of gameboard
+            //board.BoardState.GridPenWidth = _borderWidth;
+            //board.BoardState.ActiveHexBorderColor = Color.Red;
+            //board.BoardState.ActiveHexBorderWidth = _borderWidth;
+
+            //_currentGame = new MPGame(board, _currentLobby.PlayerList.Count, player, availableColors, this);
+
+            //this._board = board;
+            //this.graphicsEngine = new GraphicsEngine(board, _xOffset, _yOffset, _currentGame);
         }
 
         private void buttonMPleaveLobby_Click(object sender, EventArgs e)
@@ -911,9 +943,12 @@ namespace SnakeBattle2
                 string hostname = listBoxMPavailableGames.SelectedItem.ToString();
                 hostname = hostname.Substring(0, idx - 1);
                 _currentLobby = new GameRoom(hostname);
-                JoinGameMessage jgm = new JoinGameMessage(_MPplayer.Name) { HostName = hostname , Confirmed = false };
+                JoinGameMessage jgm = new JoinGameMessage(_MPplayer.Name) { HostName = hostname, Confirmed = false };
                 _nwc.Send(MessageHandler.Serialize(jgm));
+                GoToLobby(false); //todo DETTA LÖSTE PROBLEMET! (???????????????????)
             }
+
+
         }
 
         private void buttonMPcreateGame_Click(object sender, EventArgs e)
@@ -926,7 +961,8 @@ namespace SnakeBattle2
                 GoToLobby(true); //go to lobby as host
                 _currentLobby = new GameRoom(_MPplayer.Name);
                 listBoxMPplayerLobby.Items.Add(_MPplayer.Name);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -942,73 +978,100 @@ namespace SnakeBattle2
             disableRefresh = new Thread(DisableRefreshButton);
             disableRefresh.Start();
             FindGameMessage fg = new FindGameMessage(_MPplayer.Name);
+            if (listBoxMPplayerLobby.IsAccessible)
+            {
+                Console.WriteLine("you are in a lobby");
+            }
             Console.WriteLine("Sending request for game list");
             _nwc.Send(MessageHandler.Serialize(fg));
         }
 
 
-        private void ReadCommandList ()
+        private void ReadCommandList() //User receives messages
         {
             Console.WriteLine("Awaiting messages...");
 
-            do
+            try
             {
-                MessagesLibrary.Message msg = msgQ.ReadMessage();
-
-                if (msg is FindGameMessage)
+                do
                 {
-                    listBoxMPavailableGames.Items.Clear();
-                    Console.WriteLine("Received a list of available games");
-                    var tmpMsg = msg as FindGameMessage;
-                    foreach (var gm in tmpMsg.GamesAvailable)
+                    MessagesLibrary.Message msg = msgQ.ReadMessage();
+
+                    if (msg is FindGameMessage)
                     {
-                        if (gm.hasStarted)
-                            listBoxMPavailableGames.Items.Add($"{gm.HostName} | ({gm.PlayerList.Count}/8) [Game has started]");
+                        listBoxMPavailableGames.Items.Clear();
+                        Console.WriteLine("Received a list of available games");
+                        var tmpMsg = msg as FindGameMessage;
+                        foreach (var gm in tmpMsg.GamesAvailable)
+                        {
+                            if (gm.hasStarted)
+                                listBoxMPavailableGames.Items.Add($"{gm.HostName} | ({gm.PlayerList.Count}/8) [Game has started]");
+                            else
+                                listBoxMPavailableGames.Items.Add($"{gm.HostName} | ({gm.PlayerList.Count}/8) [Available]");
+                        }
+                    }
+                    else if (msg is ChatMessage)
+                    {
+                        ChatMessage tmpmsg = msg as ChatMessage;
+                        try
+                        {
+                            cw.receiveMessage(tmpmsg.Message);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+
+                    }
+                    else if (msg is JoinGameMessage)
+                    {
+
+                        JoinGameMessage tmpmsg = msg as JoinGameMessage;
+                        if (tmpmsg.Confirmed && tmpmsg.HostName == _currentLobby.HostName)
+                        {
+                            //GoToLobby(false);
+                            Console.WriteLine("lobby joined");
+                            listBoxMPplayerLobby.Items.Clear();
+                            _currentLobby.PlayerList = tmpmsg.PlayerListLobby;
+                            foreach (var item in tmpmsg.PlayerListLobby)
+                                listBoxMPplayerLobby.Items.Add(item.Name);
+                        }
                         else
-                            listBoxMPavailableGames.Items.Add($"{gm.HostName} | ({gm.PlayerList.Count}/8) [Available]");
+                        {
+                            GoToFindGame();
+                        }
                     }
-                }
-                else if (msg is ChatMessage)
-                {
-                    ChatMessage tmpmsg = msg as ChatMessage;
-                    try
+                    else if (msg is KickMessage) //todo handle kicked from lobby
                     {
-                        cw.receiveMessage(tmpmsg.Message);
-                    } catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-
-                } else if (msg is JoinGameMessage)
-                {
-
-                    JoinGameMessage tmpmsg = msg as JoinGameMessage;
-                    if (tmpmsg.Confirmed)
-                    {
-                        GoToLobby(false); //todo denna får programmet att krascha
-                        listBoxMPplayerLobby.Items.Add(_MPplayer.Name);
-                    } else
-                    {
+                        Console.WriteLine();
                         GoToFindGame();
                     }
-                }
-                else if (msg is KickMessage) //todo handle kicked from lobby
-                {
-                    Console.WriteLine();
-                    GoToFindGame();
-                }
-                else if (msg is PlayMessage)
-                {
+                    else if (msg is PlayMessage)
+                    {
 
-                }
+                    }
+                    else if (msg is ErrorMessage)
+                    {
+                        Console.WriteLine("received errormessage: " + msg.UserName);
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("unknown message");
+                    }
 
 
-            } while (true);
+                } while (true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void buttonMPleaveServer_Click(object sender, EventArgs e)
         {
-            
+
             _nwc.Send("quit");
             KillThread();
             GoToMainMenu();

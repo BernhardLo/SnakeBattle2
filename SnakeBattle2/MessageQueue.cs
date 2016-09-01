@@ -15,6 +15,21 @@ namespace SnakeBattle2
         public string _filterUserName = "";
         public string _filterHostName = "";
 
+        //public MessageQueue()
+        //{
+        //    Thread keepAlive = new Thread(pingTheQueue);
+        //    keepAlive.Start();
+        //}
+
+        //private void pingTheQueue()
+        //{
+        //    while(true)
+        //    {
+        //        Thread.Sleep(2000);
+        //        this.AddMessage(new ErrorMessage("<ping>"));
+        //    }
+        //}
+
         public void AddMessage(MessagesLibrary.Message msg)
         {
             lock (myLock)
@@ -35,7 +50,7 @@ namespace SnakeBattle2
                 else if (msg is StartGameMessage)
                 {
                     Console.WriteLine("Start game message received");
-                    Thread.Sleep(500);
+                    //Thread.Sleep(500);
                     if (msg.UserName == _filterHostName)
                         msgQueue.Add(msg);
 
@@ -50,14 +65,15 @@ namespace SnakeBattle2
                 else if (msg is JoinGameMessage)
                 {
                     Console.WriteLine("Join game message received");
-                    if (msg.UserName == _filterUserName)
+                    if (msg.UserName == _filterUserName) //todo test
                         msgQueue.Add(msg);
                 }
                 else if (msg is ChatMessage)
                 {
                     Console.WriteLine("Chat message received");
                     msgQueue.Add(msg);
-                } else if (msg is KickMessage)
+                }
+                else if (msg is KickMessage)
                 {
                     if (msg.UserName == _filterUserName)
                     {
@@ -70,13 +86,20 @@ namespace SnakeBattle2
                     Console.WriteLine("Error message received");
                     msgQueue.Add(msg);
                 }
+                else
+                {
+                    Console.WriteLine("Empty message received");
+                    msgQueue.Add(new ErrorMessage("<empty>"));
+                }
+
+                Console.WriteLine("pulse lock on Thread " + Thread.CurrentThread.ManagedThreadId);
                 Monitor.PulseAll(myLock);
             }
         }
 
         public Message ReadMessage()
         {
-            Message tmpMsg = null;
+            Message tmpMsg = new ErrorMessage("<empty>");
 
             lock (myLock)
             {
@@ -91,7 +114,10 @@ namespace SnakeBattle2
                 else
                 {
                     Console.WriteLine("List is empty, waiting for message...");
+                    Console.WriteLine("Waiting for lock on thread: "+Thread.CurrentThread.ManagedThreadId);
                     Monitor.Wait(myLock);
+
+                    Console.WriteLine("Pulse recieved");
                 }
             }
 

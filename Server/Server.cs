@@ -109,7 +109,7 @@ namespace SnakeBattle2Server
             BinaryWriter w = new BinaryWriter(n);
             w.Write(message);
             w.Flush();
-            Console.WriteLine(message);
+            Console.WriteLine("Private send: " +message);
         }
 
         internal bool CheckUserName(string name)
@@ -127,7 +127,7 @@ namespace SnakeBattle2Server
 
         public void Broadcast(string message)
         {
-            Console.WriteLine("Broadcasting: " + message);
+
             try
             {
                 foreach (ClientHandler tmpClient in _clients)
@@ -137,6 +137,8 @@ namespace SnakeBattle2Server
                     w.Write(message);
                     w.Flush();
                 }
+                Console.WriteLine("Broadcasting: " + message);
+
             }
             catch (Exception exep)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameLogic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,9 +12,11 @@ namespace MessagesLibrary
         public string HostName { get; set; }
         public bool Confirmed { get; set; }
 
+        public List<Player> PlayerListLobby;
+
         public JoinGameMessage(string userName) : base(userName)
         {
-
+            PlayerListLobby = new List<Player>() { new Player("<empty>") };
         }
     }
 }
