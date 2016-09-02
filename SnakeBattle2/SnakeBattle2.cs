@@ -1148,14 +1148,18 @@ namespace SnakeBattle2
 
                                 }
 
-                                if (tmp.NextUser.Name == _MPplayer.Name && tmp.StartTurn)
+                                if (tmp.NextUser.Name == _MPplayer.Name && tmp.StartTurn == 0)
                                 {
                                     Console.WriteLine("First turn, You are next!!");
                                     _currentGame.EnableStartLocationsMP();
-                                } else
+                                } else if (tmp.NextUser.Name == _MPplayer.Name && tmp.StartTurn == 1)
                                 {
                                     Console.WriteLine("Your turn!!");
-
+                                    _currentGame.DoFirstTurn();
+                                } else if (tmp.NextUser.Name == _MPplayer.Name && tmp.StartTurn == 2)
+                                {
+                                    Console.WriteLine("your turn...");
+                                    _currentGame.DoRegularTurn();
                                 }
 
                             }
@@ -1184,6 +1188,13 @@ namespace SnakeBattle2
 
         private void buttonMPleaveServer_Click(object sender, EventArgs e)
         {
+
+            if (graphicsEngine != null)
+                graphicsEngine = null;
+            if (_board != null)
+                _board = null;
+            if (_currentGame != null)
+                _currentGame = null;
 
             _nwc.Send("quit");
             KillThread();

@@ -204,7 +204,7 @@ namespace GameLogic
             }
             set
             {
-                throw new System.NotImplementedException();
+                
             }
         }
 

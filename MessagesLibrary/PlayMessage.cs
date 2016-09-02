@@ -19,7 +19,7 @@ namespace MessagesLibrary
         public bool IsAlive { get; set; }
         public Player NextUser { get; set; }
         public Player ThisPlayer { get; set; }
-        public bool StartTurn { get; set; }
+        public int StartTurn { get; set; }
 
     }
 }

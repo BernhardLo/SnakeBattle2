@@ -283,10 +283,6 @@ namespace SnakeBattle2Server
                     //    tcpclient.Close();
                     //}
                 }
-                else
-                {
-                    Console.WriteLine("error");
-                }
             }
 
         }

@@ -28,6 +28,7 @@ namespace SnakeBattle2
         bool _playerLost;
         bool isMultiPlayer;
         bool mpStartingTurn;
+        public bool mpStillmyturn;
 
         public SPGame(Board board, int numberOfPlayers, Player player, Color[] availableColors, SnakeBattle2 windowRef, bool isMultiPlayer)
         {
@@ -38,6 +39,7 @@ namespace SnakeBattle2
             _player = player;
             _availableColors = availableColors;
             _gameOn = true;
+            mpStillmyturn = true;
             _playerLost = false;
             this.isMultiPlayer = isMultiPlayer;
             if (!isMultiPlayer)
@@ -48,7 +50,8 @@ namespace SnakeBattle2
                 CreateOpponents();
                 //enable all hexes except edges as valid moves for current player
                 EnableStartLocations();
-            } else
+            }
+            else
             {
                 mpStartingTurn = true;
             }
@@ -764,7 +767,7 @@ namespace SnakeBattle2
                 op.Position[0] = tmpMoves[idx].xCoord;
                 op.Position[1] = tmpMoves[idx].yCoord;
                 _board.BoardState.ActiveHexes.Add(_board.hexes[op.Position[0], op.Position[1]]);
-                
+
 
                 _board.hexes[tmpMoves[idx].xCoord, tmpMoves[idx].yCoord].HexState.BackgroundColor = op.Color;
 
@@ -863,6 +866,49 @@ namespace SnakeBattle2
 
         #endregion
 
+        public void DoFirstTurn()
+        {
+            Hex hex = null;
+
+            for (int x = 1; x < _board.Width - 1; x++)
+            {
+                for (int y = 1; y < _board.Height - 1; y++)
+                {
+                    if (_board.hexes[x, y].HexState.BackgroundColor == _player.Color)
+                    {
+                        hex = _board.hexes[x, y];
+                    }
+                }
+            }
+
+            if (hex.yCoord % 2 == 0) //even row
+            {
+                _board.hexes[hex.xCoord, hex.yCoord - 1].IsValid = true; //top right
+                _board.hexes[hex.xCoord + 1, hex.yCoord].IsValid = true; //right
+                _board.hexes[hex.xCoord, hex.yCoord + 1].IsValid = true; //bottom right
+                _board.hexes[hex.xCoord - 1, hex.yCoord + 1].IsValid = true; //bottom left
+                _board.hexes[hex.xCoord - 1, hex.yCoord].IsValid = true; //left
+                _board.hexes[hex.xCoord - 1, hex.yCoord - 1].IsValid = true; //top left
+
+            }
+            else if (hex.yCoord % 2 == 1)//odd row
+            {
+                _board.hexes[hex.xCoord + 1, hex.yCoord - 1].IsValid = true; //top right
+                _board.hexes[hex.xCoord + 1, hex.yCoord].IsValid = true; //right
+                _board.hexes[hex.xCoord + 1, hex.yCoord + 1].IsValid = true; //bottom right
+                _board.hexes[hex.xCoord, hex.yCoord + 1].IsValid = true; //bottom left
+                _board.hexes[hex.xCoord - 1, hex.yCoord].IsValid = true; //left
+                _board.hexes[hex.xCoord, hex.yCoord - 1].IsValid = true; //top left
+            }
+
+            _player.LastClicked = hex;
+        }
+
+        public void DoRegularTurn ()
+        {
+            UpdateValidMoves(_player.Position);
+        }
+
         public void MouseClicked(object sender, MouseEventArgs e, int xOffset, int yOffset)
         {
             Point mouseClick = new Point(e.X - xOffset, e.Y - yOffset);
@@ -888,12 +934,12 @@ namespace SnakeBattle2
                             myIndex = i;
                         }
                     }
+                    myIndex++;
 
                     PlayMessage pm = new PlayMessage(_player.Name);
 
-                    if (myIndex < _windowRef.MPplayerArray.Count() - 1)
+                    if (myIndex < _windowRef.MPplayerArray.Count())
                     {
-                        myIndex++;
                         pm = new PlayMessage(_player.Name)
                         {
                             HostName = _windowRef._currentLobby.HostName,
@@ -903,10 +949,11 @@ namespace SnakeBattle2
                             UserName = _player.Name,
                             ThisPlayer = _player,
                             NextUser = _windowRef.MPplayerArray[myIndex],
-                            StartTurn = true
+                            StartTurn = 0
                         };
 
-                    } else
+                    }
+                    else
                     {
                         pm = new PlayMessage(_player.Name)
                         {
@@ -917,7 +964,7 @@ namespace SnakeBattle2
                             UserName = _player.Name,
                             ThisPlayer = _player,
                             NextUser = _windowRef.MPplayerArray[0],
-                            StartTurn = false
+                            StartTurn = 1
                         };
                     }
 
@@ -926,6 +973,76 @@ namespace SnakeBattle2
                     _board.BoardState.ActiveHexes.Add(clickedHex);
                     ClearValidMoves();
                     mpStartingTurn = false;
+
+
+                }
+                else if (clickedHex != null && clickedHex.IsValid)
+                {
+                    List<int[]> tmpMoveList = new List<int[]>();
+
+                    if (mpStillmyturn)
+                    {
+                        mpStillmyturn = false;
+
+                        int[] tmpMove = new int[2];
+                        tmpMove[0] = clickedHex.xCoord;
+                        tmpMove[1] = clickedHex.yCoord;
+                        tmpMoveList.Add(tmpMove);
+                        _board.BoardState.ActiveHexes.Remove(_player.LastClicked);
+                        _board.BoardState.ActiveHexes.Add(clickedHex);
+                        clickedHex.HexState.BackgroundColor = _player.Color;
+                        ClearValidMoves();
+                        UpdateValidMoves(clickedHex);
+
+                        PlayMessage pm = new PlayMessage(_player.Name)
+                        {
+                            HostName = _windowRef._currentLobby.HostName,
+                            IsAlive = true,
+                            MoveList = tmpMoveList,
+                            Sender = "client",
+                            UserName = _player.Name,
+                            ThisPlayer = _player,
+                            NextUser = _player,
+                            StartTurn = 2
+
+                        };
+                        Console.WriteLine("sending playmessage with next player: " + pm.NextUser.Name);
+                        _windowRef._nwc.Send(MessageHandler.Serialize(pm));
+                    }
+                    else
+                    {
+                        int myIndex = 0;
+
+                        for (int q = 0; q < _windowRef.MPplayerArray.Count(); q++)
+                        {
+                            if (_windowRef.MPplayerArray[q].Name == _player.Name)
+                            {
+                                myIndex = q;
+                            }
+                        }
+                        myIndex++;
+
+                        if (myIndex == _windowRef.MPplayerArray.Count())
+                            myIndex = 0;
+
+                        PlayMessage pm = new PlayMessage(_player.Name)
+                        {
+                            HostName = _windowRef._currentLobby.HostName,
+                            IsAlive = true,
+                            MoveList = tmpMoveList,
+                            Sender = "client",
+                            UserName = _player.Name,
+                            ThisPlayer = _player,
+                            NextUser = _windowRef.MPplayerArray[myIndex],
+                            StartTurn = 2
+                        };
+                        Console.WriteLine("sending playmessage with next player: " + pm.NextUser.Name);
+
+                        _windowRef._nwc.Send(MessageHandler.Serialize(pm));
+                        ClearValidMoves();
+                        mpStillmyturn = true;
+                    }
+
 
                 }
 

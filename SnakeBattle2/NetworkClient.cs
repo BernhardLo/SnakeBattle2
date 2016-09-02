@@ -131,7 +131,6 @@ namespace SnakeBattle2
                 BinaryWriter bnw = new BinaryWriter(nws);
                 bnw.Write(message);
                 bnw.Flush();
-                Console.WriteLine("successfully sent: "+message);
 
                 if (message.Equals("quit"))
                     _serverClient.Close();

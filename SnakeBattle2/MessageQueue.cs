@@ -107,7 +107,6 @@ namespace SnakeBattle2
                 {
                     tmpMsg = msgQueue.First();
 
-                    Console.Write("Read message from Q: " + MessageHandler.Serialize(tmpMsg));
 
                     msgQueue.RemoveAt(0);
                 }
