@@ -594,6 +594,8 @@ namespace SnakeBattle2
 
         private void Form_Closing(object sender, FormClosingEventArgs e)
         {
+            _nwc.Send("quit");
+
             if (graphicsEngine != null)
             {
                 graphicsEngine = null;
@@ -927,7 +929,7 @@ namespace SnakeBattle2
                     _currentLobby.PlayerList[i].Color = availableColors[i];
                 }
                 StartGameMessage sgm = new StartGameMessage(_MPplayer.Name) { Sender = "client", HostName = _MPplayer.Name, PlayerList = _currentLobby.PlayerList, fieldSize = Convert.ToInt32(comboBoxMPfieldSize.SelectedItem) };
-                Console.WriteLine("sending start game message: " + MessageHandler.Serialize(sgm));
+                Console.WriteLine("sending start game message");
                 _nwc.Send(MessageHandler.Serialize(sgm));
             }
 
@@ -968,7 +970,7 @@ namespace SnakeBattle2
                 _currentLobby = new GameRoom(hostname);
                 JoinGameMessage jgm = new JoinGameMessage(_MPplayer.Name) { HostName = hostname, Confirmed = false };
                 _nwc.Send(MessageHandler.Serialize(jgm));
-                GoToLobby(false); //todo DETTA LÖSTE PROBLEMET! (???????????????????)
+                GoToLobby(false);
             }
 
 
@@ -979,7 +981,7 @@ namespace SnakeBattle2
             NewLobbyMessage nlm = new NewLobbyMessage(_MPplayer.Name, true);
             try
             {
-                Console.WriteLine($"Sending: {MessageHandler.Serialize(nlm)}");
+                Console.WriteLine($"Sending new lobby message");
                 _nwc.Send(MessageHandler.Serialize(nlm));
                 GoToLobby(true); //go to lobby as host
                 _currentLobby = new GameRoom(_MPplayer.Name);
@@ -1188,6 +1190,18 @@ namespace SnakeBattle2
 
         private void buttonMPleaveServer_Click(object sender, EventArgs e)
         {
+
+            //if (_currentLobby != null && _currentLobby.HostName == _MPplayer.Name)
+            //{
+            //    _nwc.Send(MessageHandler.Serialize(new NewLobbyMessage(_MPplayer.Name, false)));
+
+            //}
+            //else if (_currentLobby != null)
+            //{
+            //    _nwc.Send(MessageHandler.Serialize(new KickMessage(_MPplayer.Name)));
+
+            //}
+
 
             if (graphicsEngine != null)
                 graphicsEngine = null;

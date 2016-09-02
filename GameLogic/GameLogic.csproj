@@ -49,9 +49,7 @@
     <Compile Include="HexState.cs" />
     <Compile Include="MathClass.cs" />
     <Compile Include="Opponent.cs" />
-    <Compile Include="OpponentNew.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="PlayerNew.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Randomizer.cs" />
   </ItemGroup>

@@ -130,7 +130,7 @@ namespace SnakeBattle2Server
 
             try
             {
-                foreach (ClientHandler tmpClient in _clients) //todo bättre broadcast?
+                foreach (ClientHandler tmpClient in _clients)
                 {
                     //NetworkStream n = tmpClient.tcpclient.GetStream();
                     //BinaryWriter w = new BinaryWriter(n);
@@ -154,20 +154,20 @@ namespace SnakeBattle2Server
         {
             Console.WriteLine(client.UserName + " has disconnected.");
 
-            foreach (var item in _games)
-            {
-                if (item.HostName == client.UserName)
-                {
-                    foreach (Player p in item.PlayerList)
-                    {
-                        KickMessage km = new KickMessage(p.Name);
-                        km.Sender = "server";
-                        Broadcast(MessageHandler.Serialize(km));
-                        //todo send kickmessage to all users
-                    }
-                    item.PlayerList.Clear();
-                }
-            }
+            //foreach (var item in _games)
+            //{
+            //    if (item.HostName == client.UserName)
+            //    {
+            //        foreach (Player p in item.PlayerList)
+            //        {
+            //            KickMessage km = new KickMessage(p.Name);
+            //            km.Sender = "server";
+            //            Broadcast(MessageHandler.Serialize(km));
+            //            //todo send kickmessage to all users
+            //        }
+            //        item.PlayerList.Clear();
+            //    }
+            //}
             _games.RemoveAll(x => x.HostName == client.UserName); //remove lobby when user disconnects, todo does this work?
 
             //todo remove lobby

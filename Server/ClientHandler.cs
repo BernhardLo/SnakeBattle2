@@ -140,6 +140,7 @@ namespace SnakeBattle2Server
                 else if (msg is NewLobbyMessage)
                 {
                     NewLobbyMessage tmp = msg as NewLobbyMessage;
+
                     if (tmp.Sender == "client")
                     {
                         if (tmp.Create)
@@ -149,9 +150,8 @@ namespace SnakeBattle2Server
                             myServer._games.Add(room);
 
                         }
-                        else //todo remove lobby
+                        else
                         {
-                            //todo kick all users
                             foreach (var item in myServer._games)
                             {
                                 if (item.HostName == tmp.UserName)
