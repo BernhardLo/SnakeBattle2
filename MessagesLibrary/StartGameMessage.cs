@@ -9,10 +9,12 @@ namespace MessagesLibrary
 {
     public class StartGameMessage : Message
     {
+        public string HostName { get; set; }
+        public List<Player> PlayerList { get; set; }
+        public int fieldSize { get; set; }
         public StartGameMessage(string userName) : base(userName)
         {
-
+            PlayerList = new List<Player>();
         }
-        public GameRoom GameRoomInfo { get; set; }
     }
 }

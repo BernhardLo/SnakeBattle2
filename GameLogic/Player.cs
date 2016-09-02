@@ -34,7 +34,7 @@ namespace GameLogic
             Name = name;
         }
 
-        private void SetHighlightColor (Color color)
+        public void SetHighlightColor (Color color)
         {
             if (color == Color.Red)
                 HighlightColor = Color.LightSalmon;

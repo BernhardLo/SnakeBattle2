@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameLogic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,13 +13,13 @@ namespace MessagesLibrary
         {
 
         }
-        //Anger vilken spelomgång som pågår, också hjälp för severn att identifiera rätt svar
-        public int TurnCount { get; set; }
+
         public string HostName { get; set; }
         public List<int[]> MoveList { get; set; }
         public bool IsAlive { get; set; }
-        public string NextUser { get; set; }
-        public int PowerUp { get; set; }
-        public bool GameIsWon { get; set; }
+        public Player NextUser { get; set; }
+        public Player ThisPlayer { get; set; }
+        public bool StartTurn { get; set; }
+
     }
 }

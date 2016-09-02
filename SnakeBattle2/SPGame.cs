@@ -1,4 +1,5 @@
 ﻿using GameLogic;
+using MessagesLibrary;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,7 +13,7 @@ namespace SnakeBattle2
 {
     public class SPGame
     {
-        Board _board;
+        public Board _board;
         int _numberOfPlayers;
         public Player _player;
         private Color[] _availableColors;
@@ -25,28 +26,59 @@ namespace SnakeBattle2
         Random rnd = new Random();
         bool _gameOn;
         bool _playerLost;
+        bool isMultiPlayer;
+        bool mpStartingTurn;
 
-        public SPGame(Board board, int numberOfPlayers, Player player, Color[] availableColors, SnakeBattle2 windowRef)
+        public SPGame(Board board, int numberOfPlayers, Player player, Color[] availableColors, SnakeBattle2 windowRef, bool isMultiPlayer)
         {
             _windowRef = windowRef;
             _movesLeft = 2;
             _board = board;
             _numberOfPlayers = numberOfPlayers;
             _player = player;
-            _player.MyTurn = true;
-            _player.IsFirstTurn = true;
             _availableColors = availableColors;
             _gameOn = true;
             _playerLost = false;
+            this.isMultiPlayer = isMultiPlayer;
+            if (!isMultiPlayer)
+            {
+                _player.MyTurn = true;
+                _player.IsFirstTurn = true;
+                _opponents = new List<Opponent>();
+                CreateOpponents();
+                //enable all hexes except edges as valid moves for current player
+                EnableStartLocations();
+            } else
+            {
+                mpStartingTurn = true;
+            }
 
+        }
 
-            _opponents = new List<Opponent>();
-            CreateOpponents();
-            //enable all hexes except edges as valid moves for current player
+        public void EnableStartLocations()
+        {
             for (int x = 1; x < _board.Width - 1; x++)
                 for (int y = 1; y < _board.Height - 1; y++)
                 {
                     _board.hexes[x, y].IsValid = true;
+                }
+        }
+
+        public void EnableStartLocationsMP()
+        {
+            for (int x = 1; x < _board.Width - 1; x++)
+                for (int y = 1; y < _board.Height - 1; y++)
+                {
+                    _board.hexes[x, y].IsValid = true;
+                }
+
+            for (int x = 1; x < _board.Width - 1; x++)
+                for (int y = 1; y < _board.Height - 1; y++)
+                {
+                    if (_board.hexes[x, y].HexState.BackgroundColor != Color.WhiteSmoke)
+                    {
+                        _board.hexes[x, y].IsValid = false;
+                    }
                 }
 
         }
@@ -96,7 +128,7 @@ namespace SnakeBattle2
 
         #region Movement Logic Player
 
-        private void UpdateValidMovesFirstTurn(Hex hex)
+        public void UpdateValidMovesFirstTurn(Hex hex)
         {
 
             if (hex.yCoord % 2 == 0) //even row
@@ -393,9 +425,9 @@ namespace SnakeBattle2
                 Thread.Sleep(200);
                 for (int i = _movesLeft; i > 0; i--)
                 {
+                    Thread.Sleep(400);
                     Console.WriteLine("===============================");
                     Console.WriteLine($"Moving Opponent: {op.Name}");
-                    Thread.Sleep(400);
                     op.ValidMoves.Clear();
                     ClearValidOpponentMoves(); //reset all hexes as false
                     if (op.IsFirstTurn)
@@ -836,49 +868,137 @@ namespace SnakeBattle2
             Point mouseClick = new Point(e.X - xOffset, e.Y - yOffset);
             Hex clickedHex = _board.FindHexMouseClick(mouseClick);
 
-            
-            if (clickedHex != null && _gameOn)
+            if (isMultiPlayer)
             {
-                if (_player.IsFirstTurn && clickedHex.IsValid)
+                if (clickedHex != null && mpStartingTurn && clickedHex.IsValid)
                 {
-                    clickedHex.HexState.BackgroundColor = _player.Color;
-                    _board.BoardState.ActiveHexes.Add(clickedHex);
-                    _player.IsFirstTurn = false;
-                    _player.MyTurn = false;
-                    ClearValidMoves();
-                    AiPlacer = new Thread(() => SetAIstartPositions(clickedHex));
-                    AiPlacer.Start();
+                    int[] tmpMove = new int[2];
+                    tmpMove[0] = clickedHex.xCoord;
+                    tmpMove[1] = clickedHex.yCoord;
+                    List<int[]> tmpMoveList = new List<int[]>();
+                    tmpMoveList.Add(tmpMove);
 
-                }
-                else if (_player.MyTurn && clickedHex.IsValid)
-                {
-                    _board.BoardState.ActiveHexes.Remove(_player.LastClicked);
-                    _board.BoardState.ActiveHexes.Add(clickedHex);
-                    clickedHex.HexState.BackgroundColor = _player.Color;
-                    ClearValidMoves();
-                    _movesLeft--;
-                    if (_movesLeft == 0)
-                    {
-                        _player.MyTurn = false;
-                        _movesLeft = 2;
-                        AiMover = new Thread(() => MainOpponentMove(clickedHex));
-                        AiMover.Start();
-                        //if (!_opponents.Any(x => x.IsAlive))
-                        //    _gameOn = false;
-                    }
-                    else
-                    {
-                        UpdateValidMoves(clickedHex);
 
+                    int myIndex = 0;
+
+                    for (int i = 0; i < _windowRef.MPplayerArray.Count(); i++)
+                    {
+                        if (_windowRef.MPplayerArray[i].Name == _player.Name)
+                        {
+                            myIndex = i;
+                        }
                     }
 
+                    PlayMessage pm = new PlayMessage(_player.Name);
+
+                    if (myIndex < _windowRef.MPplayerArray.Count() - 1)
+                    {
+                        myIndex++;
+                        pm = new PlayMessage(_player.Name)
+                        {
+                            HostName = _windowRef._currentLobby.HostName,
+                            IsAlive = true,
+                            MoveList = tmpMoveList,
+                            Sender = "client",
+                            UserName = _player.Name,
+                            ThisPlayer = _player,
+                            NextUser = _windowRef.MPplayerArray[myIndex],
+                            StartTurn = true
+                        };
+
+                    } else
+                    {
+                        pm = new PlayMessage(_player.Name)
+                        {
+                            HostName = _windowRef._currentLobby.HostName,
+                            IsAlive = true,
+                            MoveList = tmpMoveList,
+                            Sender = "client",
+                            UserName = _player.Name,
+                            ThisPlayer = _player,
+                            NextUser = _windowRef.MPplayerArray[0],
+                            StartTurn = false
+                        };
+                    }
+
+                    _windowRef._nwc.Send(MessageHandler.Serialize(pm));
+                    clickedHex.HexState.BackgroundColor = _player.Color;
+                    _board.BoardState.ActiveHexes.Add(clickedHex);
+                    ClearValidMoves();
+                    mpStartingTurn = false;
 
                 }
+
+
             }
 
-            if (!_gameOn && _playerLost)
+
+            if (isMultiPlayer == false)
             {
-                _windowRef.ShowLoss();
+                int livingop = 0;
+                foreach (Opponent op in _opponents)
+                {
+                    if (op.IsAlive) livingop++;
+                }
+                if (livingop == 0) _windowRef.ShowWin();
+
+                if (clickedHex != null && _gameOn)
+                {
+                    if (_player.IsFirstTurn && clickedHex.IsValid)
+                    {
+                        clickedHex.HexState.BackgroundColor = _player.Color;
+                        _board.BoardState.ActiveHexes.Add(clickedHex);
+                        _player.IsFirstTurn = false;
+                        _player.MyTurn = false;
+                        ClearValidMoves();
+                        AiPlacer = new Thread(() => SetAIstartPositions(clickedHex));
+                        AiPlacer.Start();
+
+                    }
+                    else if (_player.MyTurn && clickedHex.IsValid)
+                    {
+                        _board.BoardState.ActiveHexes.Remove(_player.LastClicked);
+                        _board.BoardState.ActiveHexes.Add(clickedHex);
+                        clickedHex.HexState.BackgroundColor = _player.Color;
+                        ClearValidMoves();
+                        _movesLeft--;
+                        if (_movesLeft == 0)
+                        {
+                            _player.MyTurn = false;
+                            _movesLeft = 2;
+                            AiMover = new Thread(() => MainOpponentMove(clickedHex));
+                            AiMover.Start();
+                            //if (!_opponents.Any(x => x.IsAlive))
+                            //    _gameOn = false;
+                        }
+                        else
+                        {
+                            UpdateValidMoves(clickedHex);
+
+                        }
+
+
+                    }
+                    else //new code
+                    {
+                        //UpdateValidMoves(clickedHex);
+                        int validmoves = 0;
+                        foreach (Hex x in _board.hexes)
+                        {
+                            if (x.IsValid)
+                                validmoves++;
+                        }
+                        if (validmoves == 0 && _player.MyTurn == true)
+                        {
+                            _windowRef.ShowLoss();
+                        }
+                    }
+                }
+
+                if (!_gameOn && _playerLost)
+                {
+                    _windowRef.ShowLoss();
+                }
             }
         } // MouseClicked
     }

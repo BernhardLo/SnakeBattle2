@@ -11,7 +11,9 @@ namespace MessagesLibrary
         public Message(string userName)
         {
             this.UserName = userName;
+            this.Sender = "client";
         }
         public string UserName { get; set; }
+        public string Sender { get; set; }
     }
 }

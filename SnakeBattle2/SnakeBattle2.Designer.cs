@@ -87,6 +87,7 @@ namespace SnakeBattle2
             this.labelMPlobby = new System.Windows.Forms.Label();
             this.buttonMPrefresh = new System.Windows.Forms.Button();
             this.buttonMPleaveServer = new System.Windows.Forms.Button();
+            this.infoToConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -390,7 +391,8 @@ namespace SnakeBattle2
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showConsoleToolStripMenuItem,
-            this.runServerToolStripMenuItem});
+            this.runServerToolStripMenuItem,
+            this.infoToConsoleToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
@@ -698,6 +700,13 @@ namespace SnakeBattle2
             this.buttonMPleaveServer.UseVisualStyleBackColor = false;
             this.buttonMPleaveServer.Click += new System.EventHandler(this.buttonMPleaveServer_Click);
             // 
+            // infoToConsoleToolStripMenuItem
+            // 
+            this.infoToConsoleToolStripMenuItem.Name = "infoToConsoleToolStripMenuItem";
+            this.infoToConsoleToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.infoToConsoleToolStripMenuItem.Text = "Info to Console";
+            this.infoToConsoleToolStripMenuItem.Click += new System.EventHandler(this.infoToConsoleToolStripMenuItem_Click);
+            // 
             // SnakeBattle2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -832,6 +841,7 @@ namespace SnakeBattle2
         private System.Windows.Forms.Label labelMPlobby;
         private System.Windows.Forms.Button buttonMPrefresh;
         private System.Windows.Forms.Button buttonMPleaveServer;
+        private System.Windows.Forms.ToolStripMenuItem infoToConsoleToolStripMenuItem;
     }
 }
 

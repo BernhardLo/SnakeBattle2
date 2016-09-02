@@ -65,63 +65,63 @@ namespace SnakeBattle2
             
         }
 
-        private void CommandListAdd(string message)
-        {
-            Console.WriteLine("received: " + message);
-            var msg = MessageHandler.Deserialize(message);
-            if (msg is UserNameMessage)
-            {
-                Console.WriteLine("received user name message");
-                _commandList.Add(msg);
-            }
-            else if (msg is FindGameMessage)
-            {
-                Console.WriteLine("received find game message");
-                _commandList.Add(msg);
+        //private void CommandListAdd(string message)
+        //{
+        //    Console.WriteLine("received: " + message);
+        //    var msg = MessageHandler.Deserialize(message);
+        //    if (msg is UserNameMessage)
+        //    {
+        //        Console.WriteLine("received user name message");
+        //        _commandList.Add(msg);
+        //    }
+        //    else if (msg is FindGameMessage)
+        //    {
+        //        Console.WriteLine("received find game message");
+        //        _commandList.Add(msg);
 
-            }
-            else if (msg is StartGameMessage)
-            {
-                Console.WriteLine("received start game message");
-                //Thread.Sleep(500);
-                if (msg.UserName == _filterHostName)
-                    _commandList.Add(msg);
+        //    }
+        //    else if (msg is StartGameMessage)
+        //    {
+        //        Console.WriteLine("received start game message");
+        //        //Thread.Sleep(500);
+        //        if (msg.UserName == _filterHostName)
+        //            _commandList.Add(msg);
 
-            }
-            else if (msg is PlayMessage)
-            {
-                Console.WriteLine("received play message");
-                PlayMessage tmp = msg as PlayMessage;
-                if (tmp.HostName == _filterHostName)
-                    _commandList.Add(msg);
-            }
-            else if (msg is JoinGameMessage)
-            {
-                Console.WriteLine("received join game message");
-                JoinGameMessage tmp = msg as JoinGameMessage;
-                if (msg.UserName == _filterUserName)
-                    _commandList.Add(msg);
-                else
-                {
-                    Console.WriteLine("couldnt join game");
-                }
-            }
-            else if (msg is ChatMessage)
-            {
-                Console.WriteLine("received chatmessage " +message);
-                _commandList.Add(msg);
-            } else if (msg is KickMessage)
-            {
-                Console.WriteLine("Received kick message");
-                if (msg.UserName == _filterUserName)
-                    _commandList.Add(msg);
-            }
-            else if (msg is ErrorMessage)
-            {
-                _commandList.Add(msg);
-            }
+        //    }
+        //    else if (msg is PlayMessage)
+        //    {
+        //        Console.WriteLine("received play message");
+        //        PlayMessage tmp = msg as PlayMessage;
+        //        if (tmp.HostName == _filterHostName)
+        //            _commandList.Add(msg);
+        //    }
+        //    else if (msg is JoinGameMessage)
+        //    {
+        //        Console.WriteLine("received join game message");
+        //        JoinGameMessage tmp = msg as JoinGameMessage;
+        //        if (msg.UserName == _filterUserName)
+        //            _commandList.Add(msg);
+        //        else
+        //        {
+        //            Console.WriteLine("couldnt join game");
+        //        }
+        //    }
+        //    else if (msg is ChatMessage)
+        //    {
+        //        Console.WriteLine("received chatmessage " +message);
+        //        _commandList.Add(msg);
+        //    } else if (msg is KickMessage)
+        //    {
+        //        Console.WriteLine("Received kick message");
+        //        if (msg.UserName == _filterUserName)
+        //            _commandList.Add(msg);
+        //    }
+        //    else if (msg is ErrorMessage)
+        //    {
+        //        _commandList.Add(msg);
+        //    }
 
-        }
+        //}
 
         public void Send(string message)
         {

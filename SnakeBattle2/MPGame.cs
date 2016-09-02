@@ -22,7 +22,7 @@ namespace SnakeBattle2
         bool _gameOn;
         bool _playerLost;
 
-        public MPGame(Board board, int numberOfPlayers, Player player, Color[] availableColors, SnakeBattle2 windowRef)
+        public MPGame(Board board, int numberOfPlayers, Player player, Color[] availableColors, SnakeBattle2 windowRef, List<Player> players)
         {
             _windowRef = windowRef;
             _movesLeft = 2;

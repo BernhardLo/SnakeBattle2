@@ -60,48 +60,48 @@ namespace SnakeBattle2Server
             }
         }
 
-        internal PlayMessage GetNextUser(PlayMessage pm)
-        {
-            PlayMessage result = pm;
+        //internal PlayMessage GetNextUser(PlayMessage pm)
+        //{
+        //    PlayMessage result = pm;
 
-            GameRoom gr = _games.Where(g => g.HostName == pm.HostName).SingleOrDefault();
-            Player temp = gr.PlayerList.Where(p => p.Name == pm.UserName).SingleOrDefault();
+        //    GameRoom gr = _games.Where(g => g.HostName == pm.HostName).SingleOrDefault();
+        //    Player temp = gr.PlayerList.Where(p => p.Name == pm.UserName).SingleOrDefault();
 
-            int j = gr.PlayerList.IndexOf(temp);
-
-
-            if (!pm.IsAlive)
-            {
-                if (gr.PlayerList.IndexOf(temp) == gr.PlayerList.Count - 1)
-                {
-                    j = 0;
-                }
-                gr.PlayerList.Remove(temp);
-
-            }
-            else if (pm.IsAlive)
-            {
-                if (j == gr.PlayerList.Count - 1)
-                    j = 0;
-                else
-                    j += 1;
-            }
-
-            foreach (var item in gr.PlayerList)
-                Console.WriteLine(item.Name);
-
-            result.NextUser = gr.PlayerList[j].Name;
-            //gr.StartingPlayer = result.NextUser; //todo generate starting player
-
-            if (gr.PlayerList.Count == 1)
-            {
-                result.GameIsWon = true;
-                _games.Remove(gr);
-            }
+        //    int j = gr.PlayerList.IndexOf(temp);
 
 
-            return result;
-        }
+        //    if (!pm.IsAlive)
+        //    {
+        //        if (gr.PlayerList.IndexOf(temp) == gr.PlayerList.Count - 1)
+        //        {
+        //            j = 0;
+        //        }
+        //        gr.PlayerList.Remove(temp);
+
+        //    }
+        //    else if (pm.IsAlive)
+        //    {
+        //        if (j == gr.PlayerList.Count - 1)
+        //            j = 0;
+        //        else
+        //            j += 1;
+        //    }
+
+        //    foreach (var item in gr.PlayerList)
+        //        Console.WriteLine(item.Name);
+
+        //    result.NextUser = gr.PlayerList[j].Name;
+        //    //gr.StartingPlayer = result.NextUser; //todo generate starting player
+
+        //    if (gr.PlayerList.Count == 1)
+        //    {
+        //        result.GameIsWon = true;
+        //        _games.Remove(gr);
+        //    }
+
+
+        //    return result;
+        //}
 
         internal void PrivateSend(TcpClient tcpclient, string message)
         {
@@ -130,12 +130,15 @@ namespace SnakeBattle2Server
 
             try
             {
-                foreach (ClientHandler tmpClient in _clients)
+                foreach (ClientHandler tmpClient in _clients) //todo bättre broadcast?
                 {
-                    NetworkStream n = tmpClient.tcpclient.GetStream();
-                    BinaryWriter w = new BinaryWriter(n);
-                    w.Write(message);
-                    w.Flush();
+                    //NetworkStream n = tmpClient.tcpclient.GetStream();
+                    //BinaryWriter w = new BinaryWriter(n);
+                    //w.Write(message);
+                    //w.Flush();
+                    Message msg = MessageHandler.Deserialize(message);
+                    msg.Sender = "server";
+                    tmpClient.AddMessage(msg); 
                 }
                 Console.WriteLine("Broadcasting: " + message);
 
@@ -150,6 +153,25 @@ namespace SnakeBattle2Server
         public void DisconnectClient(ClientHandler client)
         {
             Console.WriteLine(client.UserName + " has disconnected.");
+
+            foreach (var item in _games)
+            {
+                if (item.HostName == client.UserName)
+                {
+                    foreach (Player p in item.PlayerList)
+                    {
+                        KickMessage km = new KickMessage(p.Name);
+                        km.Sender = "server";
+                        Broadcast(MessageHandler.Serialize(km));
+                        //todo send kickmessage to all users
+                    }
+                    item.PlayerList.Clear();
+                }
+            }
+            _games.RemoveAll(x => x.HostName == client.UserName); //remove lobby when user disconnects, todo does this work?
+
+            //todo remove lobby
+
             FindPlayer(client.UserName);
             _clients.Remove(client);
         }

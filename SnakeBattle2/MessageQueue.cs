@@ -23,7 +23,7 @@ namespace SnakeBattle2
 
         //private void pingTheQueue()
         //{
-        //    while(true)
+        //    while (true)
         //    {
         //        Thread.Sleep(2000);
         //        this.AddMessage(new ErrorMessage("<ping>"));
@@ -51,7 +51,7 @@ namespace SnakeBattle2
                 {
                     Console.WriteLine("Start game message received");
                     //Thread.Sleep(500);
-                    if (msg.UserName == _filterHostName)
+                    //if (msg.UserName == _filterHostName)
                         msgQueue.Add(msg);
 
                 }
@@ -59,8 +59,8 @@ namespace SnakeBattle2
                 {
                     Console.WriteLine("Play message received");
                     PlayMessage tmp = msg as PlayMessage;
-                    if (tmp.HostName == _filterHostName)
-                        msgQueue.Add(msg);
+                    //if (tmp.HostName == _filterHostName)
+                    msgQueue.Add(msg);
                 }
                 else if (msg is JoinGameMessage)
                 {

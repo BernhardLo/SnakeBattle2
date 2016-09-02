@@ -26,14 +26,15 @@ namespace SnakeBattle2
         public NetworkClient _nwc;
         Board _board;
         GraphicsEngine graphicsEngine;
+        //GraphicsEngineMP graphicsEngineMP;
         public Player _MPplayer;
         int _xOffset = 20;
         int _yOffset = 20;
         int _hexSize = 30;
         int _borderWidth = 2;
         public Color[] availableColors;
-        GameRoom _currentLobby;
-        MPGame _currentMPGame;
+        public GameRoom _currentLobby;
+        //MPGame _currentMPGame;
         SPGame _currentGame;
         public MPGame _currentMPgame;
         Thread connectionThread;
@@ -43,6 +44,7 @@ namespace SnakeBattle2
         Thread disableRefresh;
         ChatWindow cw;
         MessageQueue msgQ;
+        public Player[] MPplayerArray;
 
         public SnakeBattle2()
         {
@@ -285,7 +287,7 @@ namespace SnakeBattle2
             board.BoardState.ActiveHexBorderColor = Color.Red;
             board.BoardState.ActiveHexBorderWidth = _borderWidth;
 
-            _currentGame = new SPGame(board, numberOfPlayers, player, availableColors, this);
+            _currentGame = new SPGame(board, numberOfPlayers, player, availableColors, this, false);
 
             this._board = board;
             this.graphicsEngine = new GraphicsEngine(board, _xOffset, _yOffset, _currentGame);
@@ -356,6 +358,7 @@ namespace SnakeBattle2
 
         public void GoToLobby(bool host)
         {
+            //msgQ._filterHostName = _currentLobby.HostName;
             buttonMPjoinGame.Hide();
             buttonMPcreateGame.Hide();
             buttonMPleaveLobby.Show();
@@ -368,7 +371,7 @@ namespace SnakeBattle2
                 buttonMPstartGame.Show();
                 labelMPfieldSize.Show();
                 comboBoxMPfieldSize.Enabled = true;
-                comboBoxMPfieldSize.SelectedIndex = 0;
+                comboBoxMPfieldSize.SelectedIndex = 3;
                 buttonMPstartGame.Enabled = true;
                 comboBoxMPfieldSize.Show();
             }
@@ -574,6 +577,14 @@ namespace SnakeBattle2
                 graphicsEngine.Draw(e.Graphics);
                 this.Invalidate();
             }
+
+            //if (graphicsEngineMP != null)
+            //{
+            //    graphicsEngineMP.Draw(e.Graphics);
+            //    this.Invalidate();
+            //}
+            //todo mutliplayer redraw here
+
             //Console.WriteLine("painting.." +DateTime.Now.ToString());
 
             //Force the next Paint()
@@ -909,8 +920,16 @@ namespace SnakeBattle2
 
         private void buttonMPstartGame_Click(object sender, EventArgs e)
         {
-            //StartGameMessage sgm = new StartGameMessage(_MPplayer.Name));
-            //_nwc.Send(Snew StartGameMessage(_MPplayer.Name));
+            if (listBoxMPplayerLobby.Items.Count > 1)
+            {
+                for (int i = 0; i < _currentLobby.PlayerList.Count; i++)
+                {
+                    _currentLobby.PlayerList[i].Color = availableColors[i];
+                }
+                StartGameMessage sgm = new StartGameMessage(_MPplayer.Name) { Sender = "client", HostName = _MPplayer.Name, PlayerList = _currentLobby.PlayerList, fieldSize = Convert.ToInt32(comboBoxMPfieldSize.SelectedItem) };
+                Console.WriteLine("sending start game message: " + MessageHandler.Serialize(sgm));
+                _nwc.Send(MessageHandler.Serialize(sgm));
+            }
 
             //Board board = new Board(Convert.ToInt32(comboBoxFieldSize.Text),
             //Convert.ToInt32(comboBoxFieldSize.Text), _hexSize, HexOrientation.Pointy);
@@ -928,10 +947,14 @@ namespace SnakeBattle2
 
         private void buttonMPleaveLobby_Click(object sender, EventArgs e)
         {
-            if (_MPplayer.Name == _currentLobby.HostName) //destroy lobby, kick all players
+
+            if (_currentLobby != null && _MPplayer.Name == _currentLobby.HostName) //destroy lobby, kick all players
                 _nwc.Send(MessageHandler.Serialize(new NewLobbyMessage(_MPplayer.Name, false)));
             else
                 _nwc.Send(MessageHandler.Serialize(new KickMessage(_MPplayer.Name)));
+
+
+            _currentLobby = null;
 
         }
 
@@ -978,11 +1001,6 @@ namespace SnakeBattle2
             disableRefresh = new Thread(DisableRefreshButton);
             disableRefresh.Start();
             FindGameMessage fg = new FindGameMessage(_MPplayer.Name);
-            if (listBoxMPplayerLobby.IsAccessible)
-            {
-                Console.WriteLine("you are in a lobby");
-            }
-            Console.WriteLine("Sending request for game list");
             _nwc.Send(MessageHandler.Serialize(fg));
         }
 
@@ -1009,6 +1027,76 @@ namespace SnakeBattle2
                             else
                                 listBoxMPavailableGames.Items.Add($"{gm.HostName} | ({gm.PlayerList.Count}/8) [Available]");
                         }
+                    }
+                    else if (msg is StartGameMessage)
+                    {
+                        var tmp = msg as StartGameMessage;
+                        if (_currentLobby != null && msg.UserName == _currentLobby.HostName) //mpgame starts here
+                        {
+                            //todo 0902
+                            MPplayerArray = new Player[tmp.PlayerList.Count];
+                            MPplayerArray = tmp.PlayerList.ToArray();
+
+                            foreach (Player p in tmp.PlayerList)
+                            {
+                                p.SetHighlightColor(p.Color);
+                                if (p.Name == _MPplayer.Name)
+                                    _MPplayer.Color = p.Color;
+                            }
+
+                            _MPplayer.SetHighlightColor(_MPplayer.Color);
+
+                            labelMPavailableGames.Hide();
+                            listBoxMPavailableGames.Hide();
+                            listBoxMPplayerLobby.Hide();
+                            buttonMPstartGame.Hide();
+                            buttonMPleaveLobby.Hide();
+                            labelMPlobby.Hide();
+                            labelMPfieldSize.Hide();
+                            comboBoxMPfieldSize.Hide();
+                            buttonMPrefresh.Hide();
+
+                            this._board = null;
+                            this.graphicsEngine = null;
+
+                            SetFieldAndHexSizes(tmp.fieldSize.ToString());
+
+                            Board board = new Board(tmp.fieldSize, tmp.fieldSize, _hexSize, HexOrientation.Pointy);
+
+                            board.BoardState.BackgroundColor = Color.Black; //background color of gameboard
+                            board.BoardState.GridPenWidth = _borderWidth;
+                            board.BoardState.ActiveHexBorderColor = Color.Red;
+                            board.BoardState.ActiveHexBorderWidth = _borderWidth;
+
+                            _currentGame = new SPGame(board, tmp.PlayerList.Count, _MPplayer, availableColors, this, true);
+
+                            this._board = board;
+                            this.graphicsEngine = new GraphicsEngine(board, _xOffset, _yOffset, _currentGame);
+
+                            this.Refresh();
+
+                            if (msg.UserName == _MPplayer.Name)
+                            {
+                                Console.WriteLine("you are the host, you start!");
+                                _currentGame.EnableStartLocations();
+                            }
+
+                            //MPGame multiplayergame = new MPGame(board, noPlayers, thisplayer, availablecolorsKEFF, windowRef, listofotherplayers);
+
+                        }
+
+                        //Board board = new Board(Convert.ToInt32(comboBoxFieldSize.Text),
+                        //Convert.ToInt32(comboBoxFieldSize.Text), _hexSize, HexOrientation.Pointy);
+
+                        //board.BoardState.BackgroundColor = Color.Black; //background color of gameboard
+                        //board.BoardState.GridPenWidth = _borderWidth;
+                        //board.BoardState.ActiveHexBorderColor = Color.Red;
+                        //board.BoardState.ActiveHexBorderWidth = _borderWidth;
+
+                        //_currentGame = new SPGame(board, numberOfPlayers, player, availableColors, this);
+
+                        //this._board = board;
+                        //this.graphicsEngine = new GraphicsEngine(board, _xOffset, _yOffset, _currentGame);
                     }
                     else if (msg is ChatMessage)
                     {
@@ -1043,12 +1131,37 @@ namespace SnakeBattle2
                     }
                     else if (msg is KickMessage) //todo handle kicked from lobby
                     {
-                        Console.WriteLine();
+                        Console.WriteLine("kicked from lobby");
                         GoToFindGame();
                     }
                     else if (msg is PlayMessage)
                     {
+                        PlayMessage tmp = msg as PlayMessage;
+                        Console.WriteLine("processing play message");
+                        if (_currentGame != null)
+                        {
+                            if (tmp.HostName == _currentLobby.HostName)
+                            {
+                                foreach (var item in tmp.MoveList)
+                                {
+                                    _currentGame._board.hexes[item[0], item[1]].HexState.BackgroundColor = tmp.ThisPlayer.Color;
 
+                                }
+
+                                if (tmp.NextUser.Name == _MPplayer.Name && tmp.StartTurn)
+                                {
+                                    Console.WriteLine("First turn, You are next!!");
+                                    _currentGame.EnableStartLocationsMP();
+                                } else
+                                {
+                                    Console.WriteLine("Your turn!!");
+
+                                }
+
+                            }
+                        }
+
+                        //todo 0902
                     }
                     else if (msg is ErrorMessage)
                     {
@@ -1075,6 +1188,23 @@ namespace SnakeBattle2
             _nwc.Send("quit");
             KillThread();
             GoToMainMenu();
+        }
+
+        private void infoToConsoleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_MPplayer != null)
+                Console.WriteLine("Current player is: " + _MPplayer.Name);
+
+            if (_currentLobby != null)
+            {
+                Console.WriteLine("Current Lobby contains: ");
+                foreach (var item in _currentLobby.PlayerList)
+                {
+                    Console.WriteLine(item.Name);
+                }
+                Console.WriteLine("the host is: " + _currentLobby.HostName);
+
+            }
         }
     }
 }
